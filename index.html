@@ -168,10 +168,40 @@ input.gap.bad{border-bottom-color:var(--bad);background:var(--bad-soft)}
   nav.side a{min-width:104px;flex:0 0 auto}
   nav.side a small{display:none}
 }
+/* login gate, start-date dialog, toast */
+.gate{position:fixed;inset:0;z-index:50;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto}
+.gate[hidden]{display:none}
+.shell[hidden]{display:none}
+.gate-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px;width:100%;max-width:400px}
+.gate-card h1,.gate-card h2{font-family:var(--font-display);margin:4px 0 8px;line-height:1.2}
+.gate-card h1{font-size:28px}.gate-card h2{font-size:22px}
+.gate-card .eyebrow{font:700 12px var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.gate-card input{font:inherit;font-size:18px;width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);margin:6px 0 12px}
+.gate-card .btn{width:100%;padding:12px;font-size:16px}
+.gate-card .msg{min-height:1.4em;color:var(--bad);margin:10px 0 0}
+.gate-card .hint{color:var(--muted);font-size:14px;margin:12px 0 0}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:60;max-width:calc(100% - 32px);background:var(--ink);color:var(--bg);padding:12px 16px;border-radius:10px;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.toast[hidden]{display:none}
+.sched{background:var(--accent-soft);border-radius:8px;padding:8px 12px;margin:0 0 14px}
+.sched a{color:var(--accent)}
+nav.side .logout{margin-top:10px;font:600 13px var(--font-body);background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:8px 12px;cursor:pointer;text-align:left;white-space:nowrap}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
+<div class="gate" id="gate" hidden>
+  <form class="gate-card" id="gate-form" autocomplete="off">
+    <div class="eyebrow">Ebook tự học · A1 Empower</div>
+    <h1>Tuấn Hưng · 4 tuần</h1>
+    <p>Nhập mã của bạn để vào học hoặc xem tiến độ.</p>
+    <label for="gate-code"><b>Mã đăng nhập</b></label>
+    <input id="gate-code" type="text" autocapitalize="off" spellcheck="false" placeholder="Nhập mã của bạn">
+    <button class="btn" type="submit">Vào</button>
+    <p class="msg" id="gate-msg" role="alert"></p>
+    <p class="hint">Hưng, phụ huynh và giáo viên mỗi người có một mã riêng. Chưa có mã thì hỏi giáo viên.</p>
+  </form>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 <div class="shell">
   <nav class="side" id="side" aria-label="Mục lục"></nav>
   <main id="main"></main>
@@ -663,7 +693,7 @@ D("Thi thử A (30 câu)",35,[
  ],"mockA")
 ]),
 D("Chữa đề và ôn chính tả",35,[
- N("Cách chữa đề",`<ol><li>Lên trang <b>Sổ điểm</b> hoặc cuộn lại đề A, bấm "Chấm điểm" để thấy câu sai.</li><li>Chép mỗi câu sai vào sổ lỗi: câu sai, câu đúng, vì sao.</li><li>Làm lại những câu đó sau 10 phút mà không nhìn đáp án.</li></ol>`),
+ N("Cách chữa đề",`<ol><li>Lên trang <b>Sổ điểm</b> hoặc cuộn lại đề A, bấm "Kiểm tra" để thấy câu sai.</li><li>Chép mỗi câu sai vào sổ lỗi: câu sai, câu đúng, vì sao.</li><li>Làm lại những câu đó sau 10 phút mà không nhìn đáp án.</li></ol>`),
  F("Ôn chính tả: 20 từ từ cả 3 tuần","Đây là những từ Hưng sai nhiều nhất. Gõ từ tiếng Anh.",[
   ["chùa → ___","pagoda"],["kỳ nghỉ → ___","holiday"],["tàu điện ngầm → ___","underground"],["chăn → ___","blanket"],["gối → ___","pillow"],["lễ tân → ___","receptionist"],["đầu bếp → ___","chef"],
   ["quản lý → ___","manager"],["kính → ___","glasses"],["chân váy → ___","skirt"],["quần dài → ___","trousers"],["cầu thang → ___","stairs"],["phòng khách → ___","living room"],["tủ lạnh → ___","fridge"],
@@ -698,7 +728,7 @@ D("Nói: Bài tổng kết 2 phút",40,[
   ["Mình nói liên tục khoảng 2 phút, không dừng lâu","Mình dùng ít nhất 8 động từ quá khứ đúng","Mình dùng ít nhất 5 từ vựng mới từ tuần 1–5"])
 ]),
 D("Tổng kết và bước tiếp theo",25,[
- N("Đã đạt chưa?",`<p>Vào trang <b>Sổ điểm</b> để xem điểm cao nhất của từng bài kiểm tra.</p>
+ N("Đã đạt chưa?",`<p>Vào trang <b>Sổ điểm</b> để xem điểm lần làm đầu tiên của từng bài kiểm tra.</p>
  <ul>
   <li><b>Đạt:</b> đề thi thử A và B đều từ 24/30 trở lên. Hãy xin làm lại một Progress Test thật. Mục tiêu là 80% hai lần liên tiếp.</li>
   <li><b>Gần đạt:</b> một đề từ 21–23 câu. Ôn thêm 1 tuần các chủ đề sai nhiều nhất rồi làm lại đề đó.</li>
@@ -718,31 +748,89 @@ const LS={
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const norm=s=>String(s).toLowerCase().replace(/[’‘]/g,"'").replace(/[.!?]+$/,"").replace(/\s+/g," ").trim();
 function shuffle(a){const b=a.slice();for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
+let toastTimer=null;
+function toast(msg){
+  const t=$("#toast");t.textContent=msg;t.hidden=false;
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>{t.hidden=true},7000);
+}
+const ttsFail=()=>toast("Nếu có lỗi, hãy copy link và mở lại bằng Chrome hoặc Safari.");
 function say(text){
   try{
-    if(!("speechSynthesis" in window))return;
+    if(!("speechSynthesis" in window)||typeof SpeechSynthesisUtterance==="undefined"){ttsFail();return}
     speechSynthesis.cancel();
     const u=new SpeechSynthesisUtterance(text);u.lang="en-US";u.rate=0.85;
+    let started=false;
+    u.onstart=()=>{started=true};
+    u.onerror=e=>{if(e.error!=="interrupted"&&e.error!=="canceled")ttsFail()};
     speechSynthesis.speak(u);
-  }catch(e){}
+    setTimeout(()=>{if(!started&&!speechSynthesis.speaking)ttsFail()},2500);
+  }catch(e){ttsFail()}
 }
 const fmtDate=iso=>{try{const d=new Date(iso);return d.toLocaleDateString("vi-VN")+" "+d.toLocaleTimeString("vi-VN",{hour:"2-digit",minute:"2-digit"})}catch(e){return ""}};
 const fmtSec=s=>Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
 
 /* ---------- state: local (localStorage) or shared (db) ---------- */
 const PASS=0.8;
-const CTX={inClaude:!!(window.claude&&window.claude.use),online:false,db:null,canWrite:true,canEdit:false,status:"local"};
+// Link "Ứng dụng web" của Apps Script (xem apps-script/HUONG-DAN.md). Để trống thì trang chạy riêng trên máy, không cần mã.
+const API_URL="";
+const CTX={remote:!!API_URL,online:false,code:null,role:null,canWrite:true,canEdit:false,status:"local"};
 const STATE={days:{},attempts:[],speaking:{},notes:{},config:{}};
 const dayId=(n,i)=>`w${n}d${i}`;
 function loadLocal(){
   WEEKS.forEach(w=>w.days.forEach((d,i)=>{if(LS.get("th4:d:"+dayId(w.n,i+1))==="1")STATE.days[dayId(w.n,i+1)]={w:w.n,d:i+1,done:true}}));
   try{STATE.attempts=JSON.parse(LS.get("th4:attempts")||"[]")}catch(e){STATE.attempts=[]}
   try{STATE.speaking=JSON.parse(LS.get("th4:speak")||"{}")}catch(e){STATE.speaking={}}
+  try{STATE.config=JSON.parse(LS.get("th4:config")||"{}")}catch(e){STATE.config={}}
 }
-async function dbSet(path,data){
-  if(!CTX.online)return false;
-  try{await CTX.db.doc(path).set(data);return true}
-  catch(e){if(e&&e.code==="invalid_argument"){CTX.canWrite=false;applyRole()}return false}
+/* shared mode: Google Sheet via Apps Script; writes wait in a queue until they reach the sheet */
+const Q={
+  get(){try{return JSON.parse(LS.get("th4:queue")||"[]")}catch(e){return[]}},
+  set(a){LS.set("th4:queue",JSON.stringify(a))}
+};
+async function api(body){
+  const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(body)});
+  if(!r.ok)throw new Error("HTTP "+r.status);
+  return r.json();
+}
+function saveCache(){
+  LS.set("th4:cache",JSON.stringify({days:STATE.days,attempts:STATE.attempts,speaking:STATE.speaking,notes:STATE.notes,config:STATE.config}));
+}
+function loadCache(){
+  try{const c=JSON.parse(LS.get("th4:cache")||"null");if(c)Object.assign(STATE,c)}catch(e){}
+}
+function applyItem(it){
+  const [col,id]=it.path.split("/");
+  if(col==="attempts"){STATE.attempts=STATE.attempts.filter(a=>a.id!==id);STATE.attempts.push(it.data)}
+  else if(col==="config")STATE.config=it.data||{};
+  else if(STATE[col])STATE[col][id]=it.data;
+}
+let flushing=null;
+async function flush(){
+  while(flushing)await flushing;
+  flushing=(async()=>{
+    for(;;){
+      const batch=Q.get().slice(0,50);
+      if(!batch.length)return true;
+      let r;
+      try{r=await api({action:"set",code:CTX.code,items:batch})}catch(e){return false}
+      if(!r.ok){if(r.error==="code")logout("Mã đăng nhập đã thay đổi. Hãy nhập mã mới.");return false}
+      const sent=new Set(batch.map(x=>x.path+"|"+JSON.stringify(x.data)));
+      Q.set(Q.get().filter(x=>!sent.has(x.path+"|"+JSON.stringify(x.data))));
+    }
+  })();
+  const ok=await flushing;flushing=null;
+  if(CTX.online){
+    if(!ok&&CTX.status!=="loading")CTX.status="offline";
+    else if(ok&&CTX.status==="offline")CTX.status="ok";
+    const b=$("#banner");if(b)b.innerHTML=bannerHTML();
+  }
+  return ok;
+}
+function dbSet(path,data){
+  if(!CTX.online)return Promise.resolve(false);
+  const q=Q.get().filter(x=>x.path!==path);q.push({path,data});Q.set(q);
+  saveCache();
+  return flush();
 }
 const isDone=(n,i)=>!!(STATE.days[dayId(n,i)]&&STATE.days[dayId(n,i)].done);
 function setDone(n,i,v){
@@ -762,7 +850,7 @@ function scoreOf(t){
   const a=STATE.attempts.filter(x=>x.test===t).sort((p,q)=>p.at<q.at?-1:1);
   if(!a.length)return null;
   const best=Math.max(...a.map(x=>x.correct));
-  return {best,last:a[a.length-1].correct,total:a[a.length-1].total,n:a.length};
+  return {first:a[0].correct,best,last:a[a.length-1].correct,total:a[a.length-1].total,n:a.length};
 }
 
 /* ---------- block renderers ---------- */
@@ -792,17 +880,16 @@ function rMcq(b,id){
     const qtxt=esc(it[0]).replace(/\[\[say:(.+?)\]\]/g,(m,t)=>`<button class="btn ghost sm" type="button" data-act="say" data-say="${t}">Nghe</button>`);
     return `<div class="q" data-correct="${esc(correct)}"><p>${i+1}. ${qtxt}</p>${opts.map(o=>`<label class="opt"><input type="radio" name="${id}-${i}" value="${esc(o)}"><span>${esc(o)}</span></label>`).join("")}<span class="fb"></span></div>`;
   }).join("");
-  const best=b.test?scoreOf(b.test):null;
-  return `<section class="block ex" data-kind="mcq" data-test="${b.test||""}" id="${id}"><h3>${b.h}</h3>${b.intro?`<p class="intro">${b.intro}</p>`:""}${items}
-  <div class="actions"><button class="btn" data-act="check-mcq">Chấm điểm</button><button class="btn ghost" data-act="reset-mcq">Làm lại</button><span class="score" aria-live="polite">${best?`Điểm cao nhất trước đây: ${best.best}/${best.total}`:""}</span></div></section>`;
+  const sc=b.test?scoreOf(b.test):null;
+  const rule=b.test?`<p class="intro"><b>Làm hết bài rồi nhấn Kiểm tra để xem đáp án.</b> Chỉ lần làm đầu tiên được tính để xét Đạt tuần.</p>`:"";
+  return `<section class="block ex" data-kind="mcq" data-test="${b.test||""}" id="${id}"><h3>${b.h}</h3>${b.intro?`<p class="intro">${b.intro}</p>`:""}${rule}${items}
+  <div class="actions"><button class="btn" data-act="check-mcq">Kiểm tra</button><button class="btn ghost" data-act="reset-mcq">Làm lại</button><span class="score" aria-live="polite">${sc?`Lần đầu: ${sc.first}/${sc.total} · Cao nhất: ${sc.best}/${sc.total}`:""}</span></div></section>`;
 }
 
 function rSpeak(b,id){
   const steps=(b.steps||[]).map(s=>`<li>${esc(s)}</li>`).join("");
   const checks=(b.checks||[]).map((c,i)=>`<label><input type="checkbox" id="${id}-c${i}"> ${esc(c)}</label>`).join("");
-  const rec=CTX.inClaude
-    ?`<div class="rec-wrap"><p class="rec-note" style="margin:0">Trang online không ghi âm trực tiếp. Hãy ghi bằng điện thoại (ứng dụng ghi âm hoặc voice note Zalo), gửi cho giáo viên, rồi bấm nút bên dưới. Muốn ghi âm ngay trong trang, dùng file ebook mở trên máy.</p></div>`
-    :`<div class="rec-wrap" data-rec="${id}"><div class="actions"><button class="btn rec" data-act="rec">Bắt đầu ghi âm</button><span class="timer">0:00</span></div>
+  const rec=`<div class="rec-wrap" data-rec="${id}"><div class="actions"><button class="btn rec" data-act="rec">Bắt đầu ghi âm</button><span class="timer">0:00</span></div>
   <div class="takes"></div><p class="rec-note">Ghi âm xong, nghe lại rồi bấm Tải về để lưu và gửi cho thầy/cô. Nếu trình duyệt không cho ghi âm, hãy ghi bằng điện thoại.</p></div>`;
   return `<section class="block speak" id="${id}"><h3>Nói và ghi âm: ${b.h}</h3><p>${esc(b.prompt)}</p>
   <ol>${steps}</ol>
@@ -866,7 +953,7 @@ function weekSummary(w){
   if(done<total-1)reasons.push(`Mới học ${done}/${total} ngày, cần ít nhất ${total-1}`);
   tests.forEach(t=>{
     if(!t.s)reasons.push(`Chưa làm ${t.id==="mockA"?"đề thi thử A":t.id==="mockB"?"đề thi thử B":"bài kiểm tra tuần"}`);
-    else if(t.s.best/t.s.total<PASS)reasons.push(`${t.id==="mockA"?"Đề A":t.id==="mockB"?"Đề B":"Bài kiểm tra"}: cao nhất ${Math.round(t.s.best/t.s.total*100)}%, chưa đạt 80%`);
+    else if(t.s.first/t.s.total<PASS)reasons.push(`${t.id==="mockA"?"Đề A":t.id==="mockB"?"Đề B":"Bài kiểm tra"}: lần đầu ${Math.round(t.s.first/t.s.total*100)}%, chưa đạt 80%`);
   });
   if(sent<needSent)reasons.push(`Bài nói đã gửi ${sent}/${sids.length}, cần ít nhất ${needSent}`);
   const testTaken=tests.some(t=>t.s);
@@ -884,28 +971,47 @@ function weekSummary(w){
   }
   return {total,done,tests,sids,sent,needSent,attempts,fast,last:touched.length?touched[touched.length-1]:null,started,reasons,status,late,future};
 }
-function currentWeek(){
+/* lịch: mỗi tuần là 6 ngày liên tiếp tính từ ngày bắt đầu, không theo thứ trong tuần */
+function schedPos(){
   const s=STATE.config&&STATE.config.start;
   if(!s)return null;
   const t=new Date(s+"T00:00:00");
   if(isNaN(t))return null;
-  const days=Math.floor((Date.now()-t.getTime())/86400000);
-  return days<0?0:Math.min(5,Math.floor(days/7)+1);
+  const n=new Date();
+  const idx=Math.round((new Date(n.getFullYear(),n.getMonth(),n.getDate())-t)/86400000);
+  return {idx,w:Math.floor(idx/6)+1,d:idx%6+1};
 }
+function currentWeek(){
+  const p=schedPos();
+  if(!p)return null;
+  return p.idx<0?0:Math.min(WEEKS.length+1,p.w);
+}
+const fmtDay=s=>{const [y,m,d]=String(s).split("-");return d&&m?`${d}/${m}/${y}`:s};
+function schedHTML(){
+  const p=schedPos();
+  if(!p)return "";
+  let t;
+  if(p.idx<0)t=`Chưa tới ngày bắt đầu (${fmtDay(STATE.config.start)}).`;
+  else if(p.w>WEEKS.length)t=`Đã hết ${WEEKS.length} tuần theo lịch (bắt đầu ${fmtDay(STATE.config.start)}).`;
+  else t=`Hôm nay theo lịch: <a href="#w${p.w}"><b>Tuần ${p.w} · Ngày ${p.d}</b></a> (bắt đầu ${fmtDay(STATE.config.start)}).`;
+  return `<p class="sched">${t}</p>`;
+}
+const ROLE_NAME={student:"Hưng",parent:"Phụ huynh",teacher:"Giáo viên"};
 function roleLabel(){
   if(!CTX.online)return "Tiến độ của Hưng";
-  if(CTX.canEdit)return "Giáo viên";
-  if(CTX.canWrite)return "Học viên";
-  return "Quan sát viên (phụ huynh)";
+  return "Đăng nhập: "+ROLE_NAME[CTX.role];
 }
 function bannerHTML(){
-  if(!CTX.inClaude)return "";
-  if(CTX.status==="nodb")return `<div class="callout">Bạn chưa đăng nhập claude.ai nên tiến độ chỉ lưu trên máy này và không hiện cho phụ huynh, giáo viên.</div>`;
-  if(CTX.status==="loading")return `<div class="callout">Đang tải dữ liệu theo dõi…</div>`;
-  if(CTX.status==="slow")return `<div class="callout">Chưa kết nối được dữ liệu theo dõi. Dữ liệu đang hiển thị có thể chưa mới nhất.</div>`;
-  if(CTX.status==="error")return `<div class="callout">Không đọc được dữ liệu theo dõi. Hãy tải lại trang hoặc nhờ giáo viên kiểm tra quyền truy cập.</div>`;
-  if(CTX.online&&!CTX.canWrite)return `<div class="callout"><b>Chế độ quan sát.</b> Bạn xem được tiến độ và kết quả của Hưng. Bài tập trong trang chạy thử được nhưng không được lưu.</div>`;
-  return "";
+  let h="";
+  if(CTX.online){
+    if(CTX.status==="loading")h+=`<div class="callout">Đang tải dữ liệu…</div>`;
+    else if(CTX.status==="offline"){
+      const n=Q.get().length;
+      h+=`<div class="callout">Chưa kết nối được sổ điểm chung.${CTX.canWrite&&n?` Còn ${n} kết quả chưa gửi, trang sẽ tự gửi lại khi có mạng.`:" Dữ liệu đang hiện có thể chưa mới nhất."}</div>`;
+    }
+    if(!CTX.canWrite)h+=`<div class="callout"><b>Chế độ xem.</b> Bạn xem được tiến độ và kết quả của Hưng. Bài tập trong trang làm thử được nhưng không được lưu.</div>`;
+  }
+  return h+schedHTML();
 }
 const STATUS_UI={
   pass:["Đạt tuần","tag-pass"],fail:["Chưa đạt","tag-fail"],going:["Đang học","tag-mid"],none:["Chưa bắt đầu","tag-mute"]
@@ -916,12 +1022,12 @@ function renderTracker(){
   const cw=currentWeek();
   const late=sums.some(x=>x.s.late);
   const a=scoreOf("mockA"),b=scoreOf("mockB");
-  const mockOk=a&&b&&a.best/a.total>=PASS&&b.best/b.total>=PASS;
-  const sched=cw==null?"Giáo viên chưa đặt ngày bắt đầu, nên chưa so sánh được với lịch.":cw===0?"Chưa tới ngày bắt đầu.":cw>4?"Đã qua thời gian 4 tuần theo lịch.":`Theo lịch, hôm nay thuộc tuần ${cw}. ${late?"Có tuần đang chậm so với lịch.":"Chưa thấy tuần nào chậm."}`;
+  const mockOk=a&&b&&a.first/a.total>=PASS&&b.first/b.total>=PASS;
+  const sched=cw==null?"Hưng chưa chọn ngày bắt đầu, nên chưa so sánh được với lịch.":cw===0?"Chưa tới ngày bắt đầu.":cw>WEEKS.length?`Đã hết ${WEEKS.length} tuần theo lịch.`:(late?"Có tuần đang chậm so với lịch.":"Chưa thấy tuần nào chậm so với lịch.");
   const cards=sums.map(({w,s})=>{
     const ui=s.future?["Chưa tới lịch","tag-mute"]:(s.status==="going"&&s.late?["Chậm lịch","tag-fail"]:STATUS_UI[s.status]);
     const dots=w.days.map((d,i)=>`<i class="dot${isDone(w.n,i+1)?" on":""}" title="Ngày ${i+1}"></i>`).join("");
-    const tl=s.tests.map(t=>t.s?`${t.id==="mockA"?"Đề A":t.id==="mockB"?"Đề B":"Kiểm tra"}: <b>${t.s.best}/${t.s.total}</b> (${Math.round(t.s.best/t.s.total*100)}%), ${t.s.n} lần làm`:`${t.id==="mockA"?"Đề A":t.id==="mockB"?"Đề B":"Kiểm tra"}: chưa làm`).join("<br>");
+    const tl=s.tests.map(t=>t.s?`${t.id==="mockA"?"Đề A":t.id==="mockB"?"Đề B":"Kiểm tra"}: lần đầu <b>${t.s.first}/${t.s.total}</b> (${Math.round(t.s.first/t.s.total*100)}%) · cao nhất ${t.s.best}/${t.s.total} · ${t.s.n} lần làm`:`${t.id==="mockA"?"Đề A":t.id==="mockB"?"Đề B":"Kiểm tra"}: chưa làm`).join("<br>");
     const reasons=(s.status==="fail"||s.status==="going"||s.late)&&s.reasons.length?`<ul class="why">${s.reasons.map(r=>`<li>${esc(r)}</li>`).join("")}</ul>`:"";
     const fast=s.fast?`<p class="warnline">Có lần làm bài kiểm tra quá nhanh (dưới 12 giây mỗi câu).</p>`:"";
     const note=STATE.notes["w"+w.n];
@@ -943,10 +1049,10 @@ function renderTracker(){
     const fastF=x.seconds>0&&x.seconds<x.total*12;
     return `<tr><td>${fmtDate(x.at)}</td><td>${name}</td><td>${x.correct}/${x.total} (${pct}%)</td><td>${pct>=80?'<span class="tag-pass">Đạt</span>':'<span class="tag-fail">Chưa đạt</span>'}</td><td>${x.seconds?fmtSec(x.seconds):"—"}${fastF?' <span class="tag-fail">quá nhanh</span>':""}</td></tr>`;
   }).join("");
-  const cfg=CTX.online?(CTX.canEdit?`<div class="cfg"><label for="cfg-start">Ngày bắt đầu học (để so với lịch)</label><input type="date" id="cfg-start" value="${esc(STATE.config.start||"")}"><button class="btn sm" data-act="save-start">Lưu</button><span class="saved" id="saved-start"></span></div>`:`<p class="line muted">Ngày bắt đầu: ${STATE.config.start?esc(STATE.config.start):"chưa đặt"}</p>`):"";
-  const localNote=!CTX.inClaude?`<div class="callout">Điểm và tiến độ được lưu trong trình duyệt đang dùng. Hãy luôn học trên cùng một máy và cùng một trình duyệt để không mất tiến độ.</div>`:"";
-  return `<div class="hero"><div class="eyebrow">${esc(roleLabel())}</div><h1>${CTX.inClaude?"Bảng quan sát":"Sổ điểm"}</h1>
-  <p class="lede">Một tuần được tính là <b>đạt</b> khi Hưng học ít nhất 5 trong 6 ngày, bài kiểm tra từ 80% trở lên, và đã gửi ít nhất 60% số bài nói.</p></div>
+  const cfg=(CTX.canEdit||!CTX.online)?(STATE.config.start||CTX.canEdit?`<div class="cfg"><label for="cfg-start">Ngày bắt đầu học (mỗi tuần 6 ngày tính từ ngày này)</label><input type="date" id="cfg-start" value="${esc(STATE.config.start||"")}"><button class="btn sm" data-act="save-start">Lưu</button><span class="saved" id="saved-start"></span></div>`:""):`<p class="line muted">Ngày bắt đầu: ${STATE.config.start?esc(fmtDay(STATE.config.start)):"chưa chọn"}</p>`;
+  const localNote=!CTX.online?`<div class="callout">Điểm và tiến độ được lưu trong trình duyệt đang dùng. Hãy luôn học trên cùng một máy và cùng một trình duyệt để không mất tiến độ.</div>`:"";
+  return `<div class="hero"><div class="eyebrow">${esc(roleLabel())}</div><h1>Sổ điểm</h1>
+  <p class="lede">Một tuần được tính là <b>đạt</b> khi Hưng học ít nhất 5 trong 6 ngày, <b>lần làm đầu tiên</b> của bài kiểm tra từ 80% trở lên, và đã gửi ít nhất 60% số bài nói.</p></div>
   <div id="banner">${bannerHTML()}</div>${localNote}
   <div class="sumgrid">
    <div class="stat"><b>${passed}/${WEEKS.length}</b><span>tuần đạt</span></div>
@@ -975,7 +1081,8 @@ function renderNav(cur){
   $("#side").innerHTML=`<p class="brand"><small>Ebook tự học</small>Tuấn Hưng · A1</p>`+
     link("intro","Bắt đầu","","Kế hoạch 4 tuần")+
     WEEKS.map(w=>link("w"+w.n,"Tuần "+w.n,weekProgress(w)+"%",esc(w.title),weekProgress(w))).join("")+
-    link("tracker",CTX.inClaude?"Quan sát":"Sổ điểm","","Kết quả và tiến độ");
+    link("tracker","Sổ điểm","","Kết quả và tiến độ")+
+    (CTX.online?`<button class="logout" type="button" data-act="logout">Đăng xuất · ${ROLE_NAME[CTX.role]}</button>`:"");
 }
 
 /* keep checkboxes / buttons in sync with state without re-rendering the page */
@@ -1074,6 +1181,10 @@ function resetFill(sec){
 }
 function checkMcq(sec){
   const qs=$$(".q",sec);let ok=0;
+  if(sec.dataset.test&&sec.dataset.recorded!=="1"){
+    const left=qs.filter(q=>!$("input:checked",q)).length;
+    if(left&&!confirm(`Còn ${left} câu chưa làm, vẫn nộp?`))return;
+  }
   qs.forEach(q=>{
     const correct=q.dataset.correct;
     const sel=$("input:checked",q);
@@ -1132,16 +1243,21 @@ document.addEventListener("click",async e=>{
   else if(act==="save-note"){
     const n=+el.dataset.w;const ta=$("#note-"+n);
     const rec={w:n,text:ta.value.trim(),at:new Date().toISOString()};
+    STATE.notes["w"+n]=rec;
     const ok=await dbSet("notes/w"+n,rec);
-    if(ok)STATE.notes["w"+n]=rec;
-    const s=$("#saved-"+n);if(s)s.textContent=ok?"Đã lưu "+fmtDate(rec.at):"Không lưu được. Kiểm tra quyền chỉnh sửa.";
+    const s=$("#saved-"+n);if(s)s.textContent=ok?"Đã lưu "+fmtDate(rec.at):"Chưa gửi được, trang sẽ tự gửi lại khi có mạng.";
   }
   else if(act==="save-start"){
     const v=$("#cfg-start").value;
-    const ok=await dbSet("config/main",{start:v});
-    if(ok)STATE.config={start:v};
-    const s=$("#saved-start");if(s)s.textContent=ok?"Đã lưu":"Không lưu được. Kiểm tra quyền chỉnh sửa.";
-    if(ok)renderPage("tracker");
+    if(!v)return;
+    const ok=await saveStart(v);
+    const s=$("#saved-start");if(s)s.textContent=ok?"Đã lưu":"Chưa gửi được, trang sẽ tự gửi lại khi có mạng.";
+    renderPage("tracker");
+  }
+  else if(act==="logout"){
+    const n=Q.get().length;
+    if(n&&CTX.canWrite&&!confirm(`Còn ${n} kết quả chưa gửi lên sổ điểm chung. Đăng xuất bây giờ sẽ mất các kết quả này. Vẫn đăng xuất?`))return;
+    logout("");
   }
 });
 document.addEventListener("change",e=>{
@@ -1166,37 +1282,123 @@ document.addEventListener("keydown",e=>{
 });
 window.addEventListener("hashchange",()=>renderPage(curPage()));
 
-/* ---------- shared mode (claude.ai artifact with db) ---------- */
-async function initOnline(){
-  if(!CTX.inClaude)return;
-  let db=null,user=null;
-  try{db=await window.claude.use("db")}catch(e){}
-  try{user=await window.claude.use("user")}catch(e){}
-  if(!db){CTX.status="nodb";applyRole();return}
-  CTX.db=db;CTX.online=true;CTX.status="loading";
-  STATE.days={};STATE.attempts=[];STATE.speaking={};
-  if(user){
-    try{const cw=await user.can("data.write");CTX.canWrite=cw!==false}catch(e){}
-    try{CTX.canEdit=!!(await user.canEdit())}catch(e){}
-  }
-  applyRole();onData();
-  const timer=setTimeout(()=>{if(CTX.status==="loading"){CTX.status="slow";applyRole()}},10000);
-  const ok=()=>{if(CTX.status==="loading"||CTX.status==="slow"){CTX.status="ok";clearTimeout(timer)}};
-  const fail=()=>{CTX.status="error";applyRole()};
-  const sub=(name,fn)=>{
-    try{db.collection(name).onSnapshot(s=>{fn(s);ok();onData()},fail)}catch(e){fail()}
-  };
-  const map=s=>{const m={};s.docs.forEach(d=>{m[d.id]=d.data()});return m};
-  sub("days",s=>{STATE.days=map(s)});
-  sub("attempts",s=>{STATE.attempts=Object.values(map(s))});
-  sub("speaking",s=>{STATE.speaking=map(s)});
-  sub("notes",s=>{STATE.notes=map(s)});
-  try{db.doc("config/main").onSnapshot(s=>{STATE.config=s.exists?(s.data()||{}):{};ok();onData()},fail)}catch(e){fail()}
+/* ---------- start date (chosen by Hưng on first open) ---------- */
+async function saveStart(v){
+  STATE.config={...STATE.config,start:v};
+  if(CTX.online)return dbSet("config/main",STATE.config);
+  LS.set("th4:config",JSON.stringify(STATE.config));return true;
+}
+function maybeAskStart(){
+  if(!CTX.canWrite||CTX.canEdit||STATE.config.start||$("#startdlg"))return;
+  if(CTX.online&&CTX.status!=="ok")return;
+  const n=new Date();
+  const today=`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}-${String(n.getDate()).padStart(2,"0")}`;
+  const d=document.createElement("div");
+  d.className="gate";d.id="startdlg";
+  d.innerHTML=`<form class="gate-card"><div class="eyebrow">Chào Hưng</div><h2>Chọn ngày bắt đầu học</h2>
+  <p>Ngày học tiếp theo tự tính từ ngày này. Cứ 6 ngày liên tiếp là xong 1 tuần, không phụ thuộc thứ trong tuần.</p>
+  <label for="start-date"><b>Ngày bắt đầu</b></label><input type="date" id="start-date" value="${today}" required>
+  <button class="btn" type="submit">Bắt đầu học</button></form>`;
+  document.body.appendChild(d);
+  d.querySelector("form").addEventListener("submit",async ev=>{
+    ev.preventDefault();
+    const v=$("#start-date").value;if(!v)return;
+    d.remove();
+    renderPage(curPage());
+    await saveStart(v);
+    onData();
+  });
 }
 
-loadLocal();
-renderPage(curPage());
-initOnline();
+/* ---------- login with a code (shared mode) ---------- */
+function setRole(role){
+  CTX.role=role;CTX.online=true;
+  CTX.canWrite=role==="student";CTX.canEdit=role==="teacher";
+}
+async function refresh(){
+  try{
+    const r=await api({action:"load",code:CTX.code});
+    if(!r.ok){if(r.error==="code"){logout("Mã đăng nhập đã thay đổi. Hãy nhập mã mới.");return}throw new Error(r.error)}
+    if(r.role!==CTX.role){setRole(r.role);LS.set("th4:role",r.role)}
+    const d=r.data||{};
+    STATE.days=d.days||{};STATE.attempts=Object.values(d.attempts||{});STATE.speaking=d.speaking||{};
+    STATE.notes=d.notes||{};STATE.config=(d.config&&d.config.main)||{};
+    if(CTX.canWrite){migrateLocal();Q.get().forEach(applyItem)}
+    saveCache();
+    CTX.status="ok";
+    if(CTX.canWrite&&Q.get().length)flush();
+  }catch(e){
+    CTX.status="offline";
+  }
+  onData();
+  maybeAskStart();
+}
+/* progress saved on this device before logging in is sent to the sheet once */
+function migrateLocal(){
+  if(LS.get("th4:migrated")==="1")return;
+  const q=Q.get();
+  WEEKS.forEach(w=>w.days.forEach((d,i)=>{
+    const id=dayId(w.n,i+1);
+    if(LS.get("th4:d:"+id)==="1"&&!STATE.days[id])q.push({path:"days/"+id,data:{w:w.n,d:i+1,done:true,at:new Date().toISOString()}});
+  }));
+  try{JSON.parse(LS.get("th4:attempts")||"[]").forEach(a=>{if(a&&a.id&&!STATE.attempts.some(x=>x.id===a.id))q.push({path:"attempts/"+a.id,data:a})})}catch(e){}
+  try{const sp=JSON.parse(LS.get("th4:speak")||"{}");Object.keys(sp).forEach(id=>{if(!STATE.speaking[id])q.push({path:"speaking/"+id,data:sp[id]})})}catch(e){}
+  try{const c=JSON.parse(LS.get("th4:config")||"{}");if(c.start&&!STATE.config.start)q.push({path:"config/main",data:c})}catch(e){}
+  Q.set(q);LS.set("th4:migrated","1");
+}
+function logout(msg){
+  ["th4:code","th4:role","th4:cache"].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});
+  if(!msg)try{localStorage.removeItem("th4:queue")}catch(e){}
+  CTX.online=false;CTX.code=null;CTX.role=null;
+  STATE.days={};STATE.attempts=[];STATE.speaking={};STATE.notes={};STATE.config={};
+  const sd=$("#startdlg");if(sd)sd.remove();
+  showGate(msg);
+}
+function showGate(msg){
+  $("#gate").hidden=false;$(".shell").hidden=true;
+  $("#gate-msg").textContent=msg||"";
+  setTimeout(()=>$("#gate-code").focus(),50);
+}
+$("#gate-form").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const code=$("#gate-code").value.trim();
+  const msg=$("#gate-msg"),btn=$("#gate-form button");
+  if(!code){msg.textContent="Hãy nhập mã.";return}
+  btn.disabled=true;msg.textContent="Đang kiểm tra…";
+  let r=null;
+  try{r=await api({action:"login",code})}catch(err){}
+  btn.disabled=false;
+  if(!r){msg.textContent="Không kết nối được. Kiểm tra mạng rồi thử lại.";return}
+  if(!r.ok){msg.textContent="Mã không đúng. Kiểm tra lại hoặc hỏi giáo viên.";return}
+  const prev=LS.get("th4:lastrole");
+  if(r.role!=="student"||(prev&&prev!=="student"))Q.set([]);
+  LS.set("th4:code",code);LS.set("th4:role",r.role);LS.set("th4:lastrole",r.role);
+  $("#gate-code").value="";msg.textContent="";
+  startShared(code,r.role,true);
+});
+function startShared(code,role,fresh){
+  CTX.code=code;setRole(role);
+  loadCache();if(CTX.canWrite)Q.get().forEach(applyItem);
+  CTX.status="loading";
+  $("#gate").hidden=true;$(".shell").hidden=false;
+  if(role!=="student"&&(fresh||!location.hash))history.replaceState(null,"","#tracker");
+  renderPage(curPage());
+  refresh();
+}
+function boot(){
+  if(!CTX.remote){loadLocal();renderPage(curPage());maybeAskStart();return}
+  const code=LS.get("th4:code"),role=LS.get("th4:role");
+  if(!code||!role){showGate("");return}
+  startShared(code,role);
+}
+setInterval(()=>{
+  if(!CTX.online||document.visibilityState!=="visible")return;
+  if(CTX.canWrite){if(Q.get().length)flush()}
+  else refresh();
+},60000);
+document.addEventListener("visibilitychange",()=>{if(CTX.online&&document.visibilityState==="visible")refresh()});
+window.addEventListener("online",()=>{if(CTX.online)flush()});
+boot();
 </script>
 </body>
 </html>
