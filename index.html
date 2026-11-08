@@ -248,7 +248,7 @@ INTRO=`
 
 <h2 style="margin-top:28px">Cách ghi âm</h2>
 <ul>
-  <li>Bấm "Bắt đầu ghi âm", cho phép dùng micro. Dừng, nghe lại, rồi bấm "Tải về" để gửi cho thầy/cô.</li>
+  <li>Bấm "Bắt đầu ghi âm", cho phép dùng micro. Bấm Dừng là bài ghi âm tự lưu vào thư mục Drive của thầy/cô và bài nói được đánh dấu đã gửi.</li>
   <li>Không ghi được thì dùng app ghi âm trên điện thoại hoặc voice note Zalo.</li>
   <li>Bản ghi mất khi đóng trang, nhớ tải về trước.</li>
 </ul>
@@ -913,7 +913,7 @@ function rFill(b,id){
     return `<li>${q.includes("___")?q.replace("___",inp):q+" "+inp}<span class="fb"></span></li>`;
   }).join("");
   return `<section class="block ex" data-kind="fill" id="${id}"><h3>${b.h}</h3>${b.intro?`<p class="intro">${b.intro}</p>`:""}<ol>${items}</ol>
-  <div class="actions"><button class="btn" data-act="check-fill">Kiểm tra</button><button class="btn ghost" data-act="show-fill">Xem đáp án</button><button class="btn ghost" data-act="reset-fill">Làm lại</button><span class="score" aria-live="polite"></span></div></section>`;
+  <div class="actions"><button class="btn" data-act="check-fill">Kiểm tra</button><button class="btn ghost" data-act="reset-fill">Làm lại</button><span class="score" aria-live="polite"></span></div></section>`;
 }
 
 function rMcq(b,id){
@@ -933,7 +933,7 @@ function rSpeak(b,id){
   const steps=(b.steps||[]).map(s=>`<li>${esc(s)}</li>`).join("");
   const checks=(b.checks||[]).map((c,i)=>`<label><input type="checkbox" id="${id}-c${i}"> ${esc(c)}</label>`).join("");
   const rec=`<div class="rec-wrap" data-rec="${id}"><div class="actions"><button class="btn rec" data-act="rec">Bắt đầu ghi âm</button><span class="timer">0:00</span></div>
-  <div class="takes"></div><p class="rec-note">Ghi âm xong, nghe lại rồi bấm Tải về để lưu và gửi cho thầy/cô. Nếu trình duyệt không cho ghi âm, hãy ghi bằng điện thoại.</p></div>`;
+  <div class="takes"></div><p class="rec-note">Bấm Dừng là bài ghi âm tự lưu vào Drive của thầy/cô. Nếu trình duyệt không cho ghi âm, hãy ghi bằng điện thoại rồi gửi qua Zalo.</p></div>`;
   return `<section class="block speak" id="${id}"><h3>Nói và ghi âm: ${b.h}</h3><p>${esc(b.prompt)}</p>
   <ol>${steps}</ol>
   <details class="model"><summary>Bài mẫu để đọc theo hoặc tham khảo</summary><div>${esc(b.model)}</div>
@@ -1174,7 +1174,7 @@ function syncUI(){
     btn.textContent=sent?"Đã gửi. Bấm để bỏ đánh dấu":"Đánh dấu: đã ghi âm và gửi cho giáo viên";
     btn.classList.toggle("is-sent",sent);
     btn.disabled=!CTX.canWrite;
-    info.textContent=sent&&r.at?`Đã gửi lúc ${fmtDate(r.at)}${r.total?`, tự chấm ${r.checks}/${r.total} mục`:""}`:"";
+    info.innerHTML=sent&&r.at?`Đã gửi lúc ${fmtDate(r.at)}${r.total?`, tự chấm ${r.checks}/${r.total} mục`:""}${r.files&&r.files.length?` · ${r.files.length} file trên Drive: `+r.files.map((f,i)=>`<a href="${esc(f.url)}" target="_blank" rel="noopener">nghe lần ${i+1}</a>`).join(", "):""}`:"";
   });
 }
 function applyRole(){
@@ -1217,15 +1217,42 @@ async function toggleRec(btn){
     const url=URL.createObjectURL(blob);
     const takes=$(".takes",wrap);
     const n=takes.children.length+1;
-    const name=`tuan-hung-${wrap.dataset.rec}-lan${n}.${ext}`;
+    const now=new Date(),pad=x=>String(x).padStart(2,"0");
+    const stamp=`${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+    const name=`tuan-hung-${wrap.dataset.rec}-lan${n}-${stamp}.${ext}`;
     const div=document.createElement("div");div.className="take";
-    div.innerHTML=`<span><b>Lần ${n}</b></span><audio controls src="${url}"></audio><a class="btn ghost sm" href="${url}" download="${name}">Tải về</a><button class="btn ghost sm" data-act="del-take">Xóa</button>`;
+    div.innerHTML=`<span><b>Lần ${n}</b></span><audio controls src="${url}"></audio><a class="btn ghost sm" href="${url}" download="${name}">Tải về</a><button class="btn ghost sm" data-act="del-take">Xóa</button><span class="upl"></span>`;
     takes.appendChild(div);
+    div._up={blob,name,secs:Math.round((Date.now()-start)/1000)};
     activeRec=null;
+    uploadTake(div);
   };
   mr.start();
   activeRec={mr,wrap};
   btn.textContent="Dừng ghi âm";btn.classList.add("on");
+}
+
+/* tải bài ghi âm lên thư mục Drive (qua Apps Script), xong thì tự đánh dấu bài nói đã gửi */
+function b64(blob){return new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(String(r.result).split(",")[1]);r.onerror=no;r.readAsDataURL(blob)})}
+async function uploadTake(div){
+  const st=$(".upl",div),u=div._up;
+  if(!CTX.online||!CTX.canWrite){st.textContent=CTX.online?"Chế độ xem: không lưu lên Drive.":"Bấm Tải về để lưu và gửi cho thầy/cô.";return}
+  if(u.blob.size>15e6){st.innerHTML=`<span class="tag-fail">Bài quá dài để tự lưu.</span> Bấm Tải về rồi gửi qua Zalo.`;return}
+  st.textContent="Đang lưu lên Drive…";
+  let r=null;
+  try{r=await api({action:"upload",code:CTX.code,name:u.name,mime:u.blob.type||"audio/webm",data:await b64(u.blob)})}catch(e){}
+  if(!r||!r.ok){
+    st.innerHTML=`<span class="tag-fail">Chưa lưu được lên Drive.</span> <button class="btn ghost sm" data-act="retry-up">Thử lại</button>`;
+    return;
+  }
+  st.innerHTML=`<span class="tag-pass">Đã lưu lên Drive</span>`;
+  const sec=div.closest(".block.speak");
+  const id=sec.id;const m=/^w(\d+)d(\d+)b/.exec(id)||[];
+  const checks=$$(".checks input:checked",sec).length,total=$$(".checks input",sec).length;
+  const prev=STATE.speaking[id]||{};
+  const files=(prev.files||[]).concat([{name:u.name,url:r.url,secs:u.secs}]).slice(-5);
+  setSpeak(id,{w:+m[1]||0,d:+m[2]||0,title:$(".sent",sec).dataset.title,sent:true,at:new Date().toISOString(),checks,total,files});
+  syncUI();renderNav(curPage());
 }
 
 /* ---------- checking ---------- */
@@ -1237,18 +1264,13 @@ function checkFill(sec){
     inp.classList.toggle("ok",good);inp.classList.toggle("bad",!good);
     const fb=inp.closest("li").querySelector(".fb");
     fb.className="fb "+(good?"ok":"bad");
-    fb.textContent=good?"Đúng":(inp.value.trim()?"Chưa đúng, thử lại hoặc bấm Xem đáp án":"Chưa điền");
+    const ans=inp.dataset.a.split("|").join(" hoặc ");
+    fb.textContent=good?"Đúng":(inp.value.trim()?"Chưa đúng. Đáp án: ":"Chưa điền. Đáp án: ")+ans;
     if(good)ok++;
   });
   CHK.set(sec.id);syncUI();
   const sc=$(".score",sec);sc.textContent=`${ok}/${inputs.length} câu đúng`;
   sc.className="score "+(ok/inputs.length>=0.8?"pass":"fail");
-}
-function showFill(sec){
-  $$("input.gap",sec).forEach(inp=>{
-    const fb=inp.closest("li").querySelector(".fb");
-    fb.className="fb";fb.textContent="Đáp án: "+inp.dataset.a.split("|").join(" hoặc ");
-  });
 }
 function resetFill(sec){
   $$("input.gap",sec).forEach(inp=>{inp.value="";inp.classList.remove("ok","bad");const fb=inp.closest("li").querySelector(".fb");fb.textContent="";fb.className="fb"});
@@ -1302,11 +1324,11 @@ document.addEventListener("click",async e=>{
   const sec=el.closest(".block");
   if(act==="say")say(el.dataset.say);
   else if(act==="check-fill")checkFill(sec);
-  else if(act==="show-fill")showFill(sec);
   else if(act==="reset-fill")resetFill(sec);
   else if(act==="check-mcq")checkMcq(sec);
   else if(act==="reset-mcq")resetMcq(sec);
   else if(act==="rec")toggleRec(el);
+  else if(act==="retry-up")uploadTake(el.closest(".take"));
   else if(act==="del-take"){const t=el.closest(".take");const a=$("audio",t);if(a&&a.src)URL.revokeObjectURL(a.src);t.remove()}
   else if(act==="sent"){
     if(!CTX.canWrite)return;

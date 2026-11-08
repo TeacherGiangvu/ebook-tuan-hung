@@ -10,6 +10,8 @@ var SHEET_ID = '';
 var CODE_SHEET = 'Mã đăng nhập';
 var DATA_SHEET = 'Dữ liệu';
 var LOG_SHEET = 'Nhật ký';
+// Thư mục Drive lưu file ghi âm của Hưng
+var AUDIO_FOLDER_ID = '1iDkn3q1AJ7KWLUTALi-QnjBMcKn1rlQ9';
 var DEFAULT_CODES = [
   ['Hưng (học viên)', 'student', 'hung123'],
   ['Phụ huynh', 'parent', 'phuhuynh123'],
@@ -38,6 +40,7 @@ function handle_(req) {
   if (!role) return {ok: false, error: 'code'};
   if (req.action === 'login') return {ok: true, role: role};
   if (req.action === 'load') return {ok: true, role: role, data: load_(ss)};
+  if (req.action === 'upload') return upload_(ss, role, req);
   if (req.action === 'set') {
     var items = Array.isArray(req.items) ? req.items.slice(0, 200) : [];
     var lock = LockService.getScriptLock();
@@ -51,6 +54,17 @@ function handle_(req) {
     } finally { lock.releaseLock(); }
   }
   return {ok: false, error: 'action'};
+}
+
+function upload_(ss, role, req) {
+  if (role !== 'student') return {ok: false, error: 'role'};
+  var name = String(req.name || '').replace(/[^A-Za-z0-9_.-]/g, '').slice(0, 100);
+  var mime = String(req.mime || '');
+  if (!name || !/^audio\//.test(mime) || typeof req.data !== 'string' || req.data.length > 21000000) return {ok: false, error: 'bad_file'};
+  var blob = Utilities.newBlob(Utilities.base64Decode(req.data), mime.split(';')[0], name);
+  var file = DriveApp.getFolderById(AUDIO_FOLDER_ID).createFile(blob);
+  ss.getSheetByName(LOG_SHEET).appendRow([new Date(), label_(role), 'Lưu ghi âm lên Drive: ' + name]);
+  return {ok: true, url: file.getUrl(), id: file.getId()};
 }
 
 function setup_(ss) {
