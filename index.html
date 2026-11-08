@@ -159,6 +159,10 @@ input.gap.bad{border-bottom-color:var(--bad);background:var(--bad-soft)}
 .wcard textarea,.cfg input[type=date]{font:inherit;width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
 .cfg{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
 .cfg input[type=date]{width:auto}
+.dmy{display:flex;gap:8px;margin:6px 0 12px}
+.dmy select{font:inherit;font-size:16px;padding:10px 8px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);flex:1;min-width:0}
+.cfg .dmy{margin:0}
+.dmy-err{color:var(--bad);margin:0 0 8px;min-height:1.2em}
 .btn.is-sent{background:var(--good-soft);border-color:var(--good);color:var(--good)}
 .btn:disabled,input:disabled{opacity:.55;cursor:not-allowed}
 @media (max-width:820px){
@@ -986,6 +990,23 @@ function currentWeek(){
   if(!p)return null;
   return p.idx<0?0:Math.min(WEEKS.length+1,p.w);
 }
+/* chọn ngày bằng 3 ô Ngày – Tháng – Năm, để mọi máy đều hiện theo thứ tự ngày/tháng/năm */
+const todayISO=()=>{const n=new Date();return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}-${String(n.getDate()).padStart(2,"0")}`};
+function dmyHTML(id,iso){
+  const [y,m,d]=(iso||todayISO()).split("-").map(Number);
+  const cy=new Date().getFullYear();
+  const opt=(a,b,v,f)=>{let h="";for(let i=a;i<=b;i++)h+=`<option value="${i}"${i===v?" selected":""}>${f?f(i):i}</option>`;return h};
+  return `<div class="dmy" id="${id}" role="group" aria-label="Ngày, tháng, năm">
+  <select aria-label="Ngày">${opt(1,31,d)}</select>
+  <select aria-label="Tháng">${opt(1,12,m,i=>"Tháng "+i)}</select>
+  <select aria-label="Năm">${opt(Math.min(y,cy-1),Math.max(y,cy+1),y)}</select></div>`;
+}
+function readDmy(id){
+  const [d,m,y]=$$("#"+id+" select").map(x=>+x.value);
+  const t=new Date(y,m-1,d);
+  if(t.getDate()!==d||t.getMonth()!==m-1)return null;
+  return `${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+}
 const fmtDay=s=>{const [y,m,d]=String(s).split("-");return d&&m?`${d}/${m}/${y}`:s};
 function schedHTML(){
   const p=schedPos();
@@ -1049,7 +1070,7 @@ function renderTracker(){
     const fastF=x.seconds>0&&x.seconds<x.total*12;
     return `<tr><td>${fmtDate(x.at)}</td><td>${name}</td><td>${x.correct}/${x.total} (${pct}%)</td><td>${pct>=80?'<span class="tag-pass">Đạt</span>':'<span class="tag-fail">Chưa đạt</span>'}</td><td>${x.seconds?fmtSec(x.seconds):"—"}${fastF?' <span class="tag-fail">quá nhanh</span>':""}</td></tr>`;
   }).join("");
-  const cfg=(CTX.canEdit||!CTX.online)?(STATE.config.start||CTX.canEdit?`<div class="cfg"><label for="cfg-start">Ngày bắt đầu học (mỗi tuần 6 ngày tính từ ngày này)</label><input type="date" id="cfg-start" value="${esc(STATE.config.start||"")}"><button class="btn sm" data-act="save-start">Lưu</button><span class="saved" id="saved-start"></span></div>`:""):`<p class="line muted">Ngày bắt đầu: ${STATE.config.start?esc(fmtDay(STATE.config.start)):"chưa chọn"}</p>`;
+  const cfg=(CTX.canEdit||!CTX.online)?(STATE.config.start||CTX.canEdit?`<div class="cfg"><span>Ngày bắt đầu học (mỗi tuần 6 ngày tính từ ngày này)</span>${dmyHTML("cfg-start",STATE.config.start)}<button class="btn sm" data-act="save-start">Lưu</button><span class="saved" id="saved-start"></span></div>`:""):`<p class="line muted">Ngày bắt đầu: ${STATE.config.start?esc(fmtDay(STATE.config.start)):"chưa chọn"}</p>`;
   const localNote=!CTX.online?`<div class="callout">Điểm và tiến độ được lưu trong trình duyệt đang dùng. Hãy luôn học trên cùng một máy và cùng một trình duyệt để không mất tiến độ.</div>`:"";
   return `<div class="hero"><div class="eyebrow">${esc(roleLabel())}</div><h1>Sổ điểm</h1>
   <p class="lede">Một tuần được tính là <b>đạt</b> khi Hưng học ít nhất 5 trong 6 ngày, <b>lần làm đầu tiên</b> của bài kiểm tra từ 80% trở lên, và đã gửi ít nhất 60% số bài nói.</p></div>
@@ -1248,8 +1269,8 @@ document.addEventListener("click",async e=>{
     const s=$("#saved-"+n);if(s)s.textContent=ok?"Đã lưu "+fmtDate(rec.at):"Chưa gửi được, trang sẽ tự gửi lại khi có mạng.";
   }
   else if(act==="save-start"){
-    const v=$("#cfg-start").value;
-    if(!v)return;
+    const v=readDmy("cfg-start");
+    if(!v){$("#saved-start").textContent="Ngày không hợp lệ, hãy chọn lại.";return}
     const ok=await saveStart(v);
     const s=$("#saved-start");if(s)s.textContent=ok?"Đã lưu":"Chưa gửi được, trang sẽ tự gửi lại khi có mạng.";
     renderPage("tracker");
@@ -1291,18 +1312,17 @@ async function saveStart(v){
 function maybeAskStart(){
   if(!CTX.canWrite||CTX.canEdit||STATE.config.start||$("#startdlg"))return;
   if(CTX.online&&CTX.status!=="ok")return;
-  const n=new Date();
-  const today=`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}-${String(n.getDate()).padStart(2,"0")}`;
   const d=document.createElement("div");
   d.className="gate";d.id="startdlg";
   d.innerHTML=`<form class="gate-card"><div class="eyebrow">Chào Hưng</div><h2>Chọn ngày bắt đầu học</h2>
   <p>Ngày học tiếp theo tự tính từ ngày này. Cứ 6 ngày liên tiếp là xong 1 tuần, không phụ thuộc thứ trong tuần.</p>
-  <label for="start-date"><b>Ngày bắt đầu</b></label><input type="date" id="start-date" value="${today}" required>
+  <b>Ngày bắt đầu</b>${dmyHTML("start-date")}<p class="dmy-err" id="start-err" role="alert"></p>
   <button class="btn" type="submit">Bắt đầu học</button></form>`;
   document.body.appendChild(d);
   d.querySelector("form").addEventListener("submit",async ev=>{
     ev.preventDefault();
-    const v=$("#start-date").value;if(!v)return;
+    const v=readDmy("start-date");
+    if(!v){$("#start-err").textContent="Ngày không hợp lệ, hãy chọn lại.";return}
     d.remove();
     renderPage(curPage());
     await saveStart(v);
