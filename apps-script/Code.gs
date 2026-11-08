@@ -5,6 +5,8 @@
  * Lần đầu có người đăng nhập, script tự tạo 3 trang tính: "Mã đăng nhập", "Dữ liệu", "Nhật ký".
  * Đổi mã đăng nhập: sửa cột "Mã" ở trang "Mã đăng nhập".
  */
+// ID của Google Sheet lưu dữ liệu. Để trống nếu script được tạo từ trong Sheet (Tiện ích mở rộng > Apps Script).
+var SHEET_ID = '';
 var CODE_SHEET = 'Mã đăng nhập';
 var DATA_SHEET = 'Dữ liệu';
 var LOG_SHEET = 'Nhật ký';
@@ -30,7 +32,7 @@ function out_(o) {
 }
 
 function handle_(req) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = SHEET_ID ? SpreadsheetApp.openById(SHEET_ID) : SpreadsheetApp.getActiveSpreadsheet();
   setup_(ss);
   var role = roleOf_(ss, req.code);
   if (!role) return {ok: false, error: 'code'};
