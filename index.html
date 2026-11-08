@@ -1239,10 +1239,15 @@ async function uploadTake(div){
   if(!CTX.online||!CTX.canWrite){st.textContent=CTX.online?"Chế độ xem: không lưu lên Drive.":"Bấm Tải về để lưu và gửi cho thầy/cô.";return}
   if(u.blob.size>15e6){st.innerHTML=`<span class="tag-fail">Bài quá dài để tự lưu.</span> Bấm Tải về rồi gửi qua Zalo.`;return}
   st.textContent="Đang lưu lên Drive…";
-  let r=null;
-  try{r=await api({action:"upload",code:CTX.code,name:u.name,mime:u.blob.type||"audio/webm",data:await b64(u.blob)})}catch(e){}
+  let r=null,why="";
+  try{r=await api({action:"upload",code:CTX.code,name:u.name,mime:u.blob.type||"audio/webm",data:await b64(u.blob)})}
+  catch(e){why=navigator.onLine===false?"Máy đang mất mạng.":"Máy chủ Google không trả lời đúng ("+e.message+")."}
   if(!r||!r.ok){
-    st.innerHTML=`<span class="tag-fail">Chưa lưu được lên Drive.</span> <button class="btn ghost sm" data-act="retry-up">Thử lại</button>`;
+    if(r)why=r.error==="action"?"Script trên Google vẫn là bản cũ. Thầy/cô cần triển khai Phiên bản mới.":
+      r.error==="drive"?"Google Drive báo lỗi: "+r.message:
+      r.error==="code"?"Mã đăng nhập đã đổi, hãy đăng nhập lại.":
+      r.error==="bad_file"?"File ghi âm không hợp lệ.":"Lỗi: "+r.error;
+    st.innerHTML=`<span class="tag-fail">Chưa lưu được lên Drive.</span> <button class="btn ghost sm" data-act="retry-up">Thử lại</button><br><small>${esc(why)} Có thể bấm Tải về rồi gửi qua Zalo.</small>`;
     return;
   }
   st.innerHTML=`<span class="tag-pass">Đã lưu lên Drive</span>`;

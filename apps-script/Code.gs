@@ -61,10 +61,19 @@ function upload_(ss, role, req) {
   var name = String(req.name || '').replace(/[^A-Za-z0-9_.-]/g, '').slice(0, 100);
   var mime = String(req.mime || '');
   if (!name || !/^audio\//.test(mime) || typeof req.data !== 'string' || req.data.length > 21000000) return {ok: false, error: 'bad_file'};
-  var blob = Utilities.newBlob(Utilities.base64Decode(req.data), mime.split(';')[0], name);
-  var file = DriveApp.getFolderById(AUDIO_FOLDER_ID).createFile(blob);
-  ss.getSheetByName(LOG_SHEET).appendRow([new Date(), label_(role), 'Lưu ghi âm lên Drive: ' + name]);
-  return {ok: true, url: file.getUrl(), id: file.getId()};
+  try {
+    var blob = Utilities.newBlob(Utilities.base64Decode(req.data), mime.split(';')[0], name);
+    var file = DriveApp.getFolderById(AUDIO_FOLDER_ID).createFile(blob);
+    ss.getSheetByName(LOG_SHEET).appendRow([new Date(), label_(role), 'Lưu ghi âm lên Drive: ' + name]);
+    return {ok: true, url: file.getUrl(), id: file.getId()};
+  } catch (x) {
+    return {ok: false, error: 'drive', message: String(x && x.message || x)};
+  }
+}
+
+// Chạy hàm này một lần trong trình soạn Apps Script (chọn kiemTraDrive rồi bấm Chạy) để cấp quyền Google Drive.
+function kiemTraDrive() {
+  Logger.log('Thư mục lưu ghi âm: ' + DriveApp.getFolderById(AUDIO_FOLDER_ID).getName());
 }
 
 function setup_(ss) {
