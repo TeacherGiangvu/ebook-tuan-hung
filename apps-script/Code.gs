@@ -112,10 +112,11 @@ function label_(role) { return role === 'student' ? 'Hưng' : role === 'teacher'
 
 function describe_(col, d) {
   d = d || {};
-  if (col === 'days') return (d.done ? 'Học xong' : 'Bỏ tick') + ' tuần ' + d.w + ' ngày ' + d.d;
+  var late = d.late ? ' (hoàn thành muộn)' : '';
+  if (col === 'days') return (d.done ? 'Học xong' : 'Bỏ tick') + ' tuần ' + d.w + ' ngày ' + d.d + late;
   if (col === 'attempts') {
     var name = d.test === 'mockA' ? 'Thi thử A' : d.test === 'mockB' ? 'Thi thử B' : 'Kiểm tra tuần ' + String(d.test).slice(1);
-    return name + ': ' + d.correct + '/' + d.total + (d.seconds ? ' (' + Math.round(d.seconds / 60) + ' phút)' : '');
+    return name + ': ' + d.correct + '/' + d.total + (d.seconds ? ' (' + Math.round(d.seconds / 60) + ' phút)' : '') + late;
   }
   if (col === 'speaking') return (d.sent ? 'Gửi bài nói: ' : 'Bỏ đánh dấu bài nói: ') + (d.title || '');
   if (col === 'notes') return 'Nhận xét tuần ' + d.w + ': ' + (d.text || '');
