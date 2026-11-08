@@ -1,0 +1,1414 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ebook tự học 6 tuần cho Tuấn Hưng</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Nunito+Sans:wght@400;600;700&display=swap">
+<style>
+/* Layout: sidebar of weeks on the left, one lesson page at a time on the right; stacks to a top strip on phones. */
+:root{
+  --bg:#F4F7F6; --surface:#FFFFFF; --ink:#14201F; --muted:#52625F; --line:#D5DFDC;
+  --accent:#0E6B73; --accent-ink:#FFFFFF; --accent-soft:#DFF0F0;
+  --speak:#4B3FA8; --speak-soft:#ECEAFB;
+  --good:#17703F; --good-soft:#DFF3E7; --bad:#B3261E; --bad-soft:#FBE5E3; --warn-soft:#FFF2D6; --warn:#7A4F00;
+  --font-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --font-body:"Nunito Sans","Segoe UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1514; --surface:#152120; --ink:#E5EEEC; --muted:#9BAFAB; --line:#294240;
+    --accent:#52C4CD; --accent-ink:#06201F; --accent-soft:#12302F;
+    --speak:#ADA4F7; --speak-soft:#211E45;
+    --good:#62D494; --good-soft:#12301F; --bad:#FF8E85; --bad-soft:#3A1816; --warn-soft:#33270B; --warn:#F0C36B;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D1514; --surface:#152120; --ink:#E5EEEC; --muted:#9BAFAB; --line:#294240;
+  --accent:#52C4CD; --accent-ink:#06201F; --accent-soft:#12302F;
+  --speak:#ADA4F7; --speak-soft:#211E45;
+  --good:#62D494; --good-soft:#12301F; --bad:#FF8E85; --bad-soft:#3A1816; --warn-soft:#33270B; --warn:#F0C36B;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--font-body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 80px}
+.shell{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px;align-items:start}
+nav.side{position:sticky;top:16px;display:flex;flex-direction:column;gap:6px}
+.brand{font:700 20px/1.2 var(--font-display);margin:0 0 10px}
+.brand small{display:block;font:600 12px var(--font-body);color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+nav.side a{display:grid;grid-template-columns:1fr auto;gap:4px 8px;padding:9px 12px;border-radius:8px;color:var(--ink);text-decoration:none;border:1px solid transparent}
+nav.side a:hover{background:var(--accent-soft)}
+nav.side a[aria-current="page"]{background:var(--accent);color:var(--accent-ink)}
+nav.side a b{font-weight:700}
+nav.side a span{font-size:13px;opacity:.85;font-variant-numeric:tabular-nums}
+nav.side a small{grid-column:1/-1;font-size:12.5px;opacity:.8;line-height:1.3}
+.bar{grid-column:1/-1;height:4px;border-radius:2px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--good)}
+nav.side a[aria-current="page"] .bar{background:rgba(255,255,255,.35)}
+main{min-width:0}
+h1,h2,h3{font-family:var(--font-display);line-height:1.2;text-wrap:balance;margin:0}
+h1{font-size:clamp(28px,4.5vw,40px);letter-spacing:-.01em}
+h2{font-size:24px;margin-bottom:12px}
+h3{font-size:18px;margin-bottom:10px}
+.eyebrow{font:700 12px var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.lede{font-size:18px;color:var(--muted);max-width:62ch;margin:10px 0 0}
+.hero{padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:24px}
+.goals{margin:16px 0 0;padding-left:20px}
+.goals li{margin:4px 0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{font-size:13px;font-weight:700;padding:3px 10px;border-radius:99px;background:var(--accent-soft);color:var(--accent)}
+.chip.s{background:var(--speak-soft);color:var(--speak)}
+.chip.w{background:var(--warn-soft);color:var(--warn)}
+details.day{background:var(--surface);border:1px solid var(--line);border-radius:12px;margin:14px 0}
+details.day>summary{list-style:none;cursor:pointer;padding:16px 18px;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
+details.day>summary::-webkit-details-marker{display:none}
+details.day>summary .dn{font:700 13px var(--font-body);color:var(--accent);letter-spacing:.06em;text-transform:uppercase;min-width:54px}
+details.day>summary .dt{font:700 18px var(--font-display);flex:1 1 220px}
+details.day>summary .dm{font-size:13px;color:var(--muted)}
+details.day>summary .ok{display:none;font-size:13px;font-weight:700;color:var(--good)}
+details.day.done>summary .ok{display:inline}
+details.day[open]>summary{border-bottom:1px solid var(--line)}
+.daybody{padding:6px 18px 18px}
+.block{margin:18px 0;padding:16px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.block.note{background:var(--accent-soft);border-color:transparent}
+.block.speak{background:var(--speak-soft);border-color:transparent}
+.block h3{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.block .intro{margin:0 0 10px;color:var(--muted)}
+.block p{margin:8px 0}
+.block ul,.block ol{margin:8px 0;padding-left:22px}
+.block li{margin:5px 0}
+.tablewrap{overflow-x:auto;margin:10px 0}
+table{border-collapse:collapse;width:100%;min-width:420px;font-size:15px}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:var(--surface);font-weight:700}
+.block.vocab .en{font-weight:700}
+.hide-vi .vi{color:transparent;background:var(--line);border-radius:4px;user-select:none}
+.toggle{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--muted);margin:0 0 8px}
+.eg{color:var(--muted);font-size:14.5px}
+.ex ol{list-style:decimal;padding-left:26px}
+.ex li{padding:6px 0}
+input.gap{font:inherit;width:9.5em;max-width:100%;padding:3px 8px;margin:0 3px;border:none;border-bottom:2px solid var(--accent);background:var(--surface);color:var(--ink);border-radius:4px 4px 0 0}
+input.gap:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+input.gap.ok{border-bottom-color:var(--good);background:var(--good-soft)}
+input.gap.bad{border-bottom-color:var(--bad);background:var(--bad-soft)}
+.fb{display:block;font-size:14px;margin-top:2px}
+.fb.bad{color:var(--bad)}
+.fb.ok{color:var(--good)}
+.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:14px}
+.btn{font:700 14px var(--font-body);padding:8px 14px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);cursor:pointer;text-decoration:none;display:inline-block}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn.sm{padding:3px 10px;font-size:13px}
+.btn.rec{background:var(--speak);border-color:var(--speak);color:#fff}
+.btn.rec.on{background:var(--bad);border-color:var(--bad)}
+.btn:focus-visible,summary:focus-visible,a:focus-visible,input:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.score{font-weight:700}
+.score.pass{color:var(--good)}
+.score.fail{color:var(--bad)}
+.q{padding:12px 0;border-top:1px solid var(--line)}
+.q:first-of-type{border-top:none}
+.q p{margin:0 0 6px;font-weight:600}
+.opt{display:flex;gap:8px;align-items:flex-start;padding:5px 8px;border-radius:6px;cursor:pointer}
+.opt:hover{background:var(--accent-soft)}
+.opt.right{background:var(--good-soft);color:var(--good);font-weight:700}
+.opt.wrong{background:var(--bad-soft);color:var(--bad)}
+.opt input{margin-top:6px}
+.rec-wrap{margin-top:12px;padding:12px;border-radius:8px;background:var(--surface);border:1px dashed var(--speak)}
+.timer{font-variant-numeric:tabular-nums;font-weight:700;margin-left:10px}
+.take{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.take audio{max-width:100%;height:36px}
+.rec-note{font-size:13.5px;color:var(--muted);margin:8px 0 0}
+.checks label{display:flex;gap:8px;align-items:flex-start;margin:6px 0}
+.model{margin-top:8px}
+.model summary{cursor:pointer;font-weight:700;color:var(--speak)}
+.model div{white-space:pre-line;margin-top:6px;padding:10px 12px;background:var(--surface);border-radius:8px}
+.donebar{display:flex;gap:10px;align-items:center;margin-top:18px;padding-top:14px;border-top:1px solid var(--line);font-weight:700}
+.callout{border-left:4px solid var(--warn);background:var(--warn-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:12px 0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:14px 0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px}
+.card h3{font-size:16px}
+.card p{margin:4px 0;font-size:15px}
+.tag-pass{color:var(--good);font-weight:700}
+.tag-fail{color:var(--bad);font-weight:700}
+.tag-mid{color:var(--accent);font-weight:700}
+.tag-mute{color:var(--muted);font-weight:700}
+.line{margin:6px 0}
+.muted{color:var(--muted)}
+.sumgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:14px 0}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.stat b{font:700 28px var(--font-display);font-variant-numeric:tabular-nums}
+.stat span{font-size:13.5px;color:var(--muted)}
+.wgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.wcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;min-width:0}
+.wcard header{display:flex;flex-wrap:wrap;gap:6px 10px;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.wcard h3{font-size:16px;margin:0;flex:1 1 180px}
+.status{font-size:13px;font-weight:700;padding:2px 10px;border-radius:99px;background:var(--bg);border:1px solid var(--line);white-space:nowrap}
+.dots{display:flex;align-items:center;gap:6px;margin:6px 0 8px}
+.dots span{font-size:13.5px;color:var(--muted);margin-left:6px}
+.dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--line);background:transparent;display:inline-block}
+.dot.on{background:var(--good);border-color:var(--good)}
+.why{margin:6px 0;padding-left:20px;color:var(--bad);font-size:14.5px}
+.warnline{margin:6px 0;color:var(--warn);font-size:14.5px;font-weight:700}
+.notel{font-size:13px;font-weight:700;color:var(--muted);margin:10px 0 4px;display:block}
+.notetext{margin:0;font-size:15px}
+.saved{font-size:13px;color:var(--muted)}
+.wcard textarea,.cfg input[type=date]{font:inherit;width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.cfg{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.cfg input[type=date]{width:auto}
+.btn.is-sent{background:var(--good-soft);border-color:var(--good);color:var(--good)}
+.btn:disabled,input:disabled{opacity:.55;cursor:not-allowed}
+@media (max-width:820px){
+  .shell{grid-template-columns:minmax(0,1fr);gap:16px}
+  nav.side{position:static;flex-direction:row;overflow-x:auto;padding-bottom:6px;gap:8px}
+  nav.side .brand{display:none}
+  nav.side a{min-width:104px;flex:0 0 auto}
+  nav.side a small{display:none}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="side" id="side" aria-label="Mục lục"></nav>
+  <main id="main"></main>
+</div>
+<script>
+"use strict";
+const WEEKS=[];
+let INTRO="";
+const N=(h,html)=>({t:"note",h,html});
+const V=(h,rows,intro)=>({t:"vocab",h,rows,intro});
+const F=(h,intro,items)=>({t:"fill",h,intro,items});
+const M=(h,intro,items,test)=>({t:"mcq",h,intro,items,test});
+const S=(h,prompt,steps,model,checks)=>({t:"speak",h,prompt,steps,model,checks});
+const D=(title,min,blocks)=>({title,min,blocks});
+INTRO=`
+<div class="hero">
+  <div class="eyebrow">Ebook tự học · Tuấn Hưng · A1 Empower</div>
+  <h1>6 tuần để chạm 80% vững vàng</h1>
+  <p class="lede">Bảng điểm cho thấy Hưng đã nắm bài khá tốt ngay sau khi học. Điều còn thiếu là độ chính xác khi làm nhanh và khi kiến thức trộn lẫn trong Progress Test. Ebook này vá đúng những chỗ đó.</p>
+  <div class="chips"><span class="chip">6 tuần</span><span class="chip">5 ngày học + 1 ngày kiểm tra mỗi tuần</span><span class="chip">30–40 phút mỗi ngày</span><span class="chip s">Ghi âm ngay trong trang</span></div>
+</div>
+
+<h2>4 tuần có đủ không?</h2>
+<p><b>Chưa đủ. Nên học 6 tuần.</b> Hưng không thiếu kiến thức nền, nhưng có 5 nhóm lỗi riêng biệt. Mỗi nhóm cần khoảng một tuần để học, luyện và kiểm tra lại. Học dồn vào 4 tuần thì phải bỏ bớt một nhóm hoặc bỏ phần ghi âm, mà đây là hai việc làm cho kiến thức bám lâu.</p>
+<div class="grid2">
+  <div class="card"><h3>Tuần 1–5: vá lỗ hổng</h3><p>Mỗi tuần một nhóm lỗi, có bài học, bài tập, ghi âm và bài kiểm tra cuối tuần 15 câu.</p></div>
+  <div class="card"><h3>Tuần 6: thi thử và chốt</h3><p>Hai đề thi thử 30 câu giống Progress Test thật, sổ lỗi cá nhân và bài nói tổng kết.</p></div>
+</div>
+<p>Mục tiêu cuối cùng: <b>đạt từ 80% trở lên ở 2 bài thi thử liên tiếp</b>, rồi làm lại Progress Test thật. Nếu sau tuần 6 vẫn chưa đạt, thêm 1–2 tuần ôn đúng phần sai, không học lại từ đầu.</p>
+
+<h2 style="margin-top:28px">Chẩn đoán từ bảng điểm</h2>
+<div class="tablewrap"><table>
+<tr><th>Lỗi lặp lại trong bài của Hưng</th><th>Học ở</th></tr>
+<tr><td>Quá khứ của be: <i>He ___ home at six o'clock yesterday</i></td><td>Tuần 1</td></tr>
+<tr><td>Quá khứ đơn và câu hỏi với did: <i>Where ___ you go…? What ___ the weather like?</i></td><td>Tuần 2</td></tr>
+<tr><td>Từ vựng khách sạn (Unit 5B) và nghề nghiệp (Unit 6), sai cả loạt từ</td><td>Tuần 3</td></tr>
+<tr><td>Quần áo (Unit 7B), sở hữu cách và this/that/these/those, ngôi nhà (Unit 10A)</td><td>Tuần 4</td></tr>
+<tr><td>Giới từ: <i>on + day, in a hotel, on a bus, next door</i>; số, giá tiền, giờ</td><td>Tuần 5</td></tr>
+<tr><td>Làm quá nhanh (quiz 20 câu chỉ 2 phút) nên sai chính tả những từ đã biết</td><td>Mọi tuần</td></tr>
+</table></div>
+
+<h2 style="margin-top:28px">Cách học mỗi ngày</h2>
+<ol>
+  <li><b>5 phút khởi động:</b> bật chế độ "Che nghĩa" ở bảng từ tuần này và đoán lại các từ hôm trước.</li>
+  <li><b>15–20 phút học và làm bài:</b> đọc phần ghi nhớ, làm bài điền từ rồi bấm "Kiểm tra". Bài sai thì làm lại, đừng chỉ xem đáp án.</li>
+  <li><b>5–10 phút nói và ghi âm:</b> làm theo hướng dẫn trong khung tím, nghe lại và tự chấm bằng danh sách kiểm tra.</li>
+  <li><b>Tick "Đã học xong"</b> ở cuối ngày. Thanh tiến độ bên trái sẽ chạy.</li>
+</ol>
+<div class="callout"><b>Quy tắc làm chậm.</b> Một quiz 20 câu cần ít nhất 4 phút. Đọc lại câu hỏi và kiểm tra chính tả từng từ trước khi nộp. Với từ sai, viết tay 3 lần vào sổ lỗi.</div>
+
+<h2 style="margin-top:28px">Cách ghi âm</h2>
+<p>Trong các khung <b>Nói và ghi âm</b> có nút "Bắt đầu ghi âm". Lần đầu, trình duyệt sẽ hỏi quyền dùng micro, hãy chọn Cho phép. Sau khi dừng, Hưng nghe lại ngay và bấm "Tải về" để lưu file gửi cho thầy/cô.</p>
+<ul>
+  <li>Dùng Chrome, Edge hoặc Firefox, mở file ebook trực tiếp từ máy.</li>
+  <li>Nếu trình duyệt không cho ghi âm, hãy ghi bằng ứng dụng ghi âm trên điện thoại hoặc voice note Zalo, rồi gửi lại. Nội dung nói vẫn giống hệt.</li>
+  <li>Bản ghi chỉ nằm trong trang cho đến khi đóng. Hãy tải về những bản muốn giữ.</li>
+  <li>Nút "Nghe mẫu" và "Nghe" dùng giọng đọc của máy, chỉ để tham khảo cách phát âm.</li>
+</ul>
+
+<h2 style="margin-top:28px">Mức "ổn" là bao nhiêu?</h2>
+<p>Ngưỡng đạt là <b>80%</b>. Với bài 15 câu, đó là 12 câu đúng. Với bài 30 câu, đó là 24 câu đúng. Điểm cao nhất mỗi bài kiểm tra được lưu lại ở trang <b>Sổ điểm</b>.</p>
+
+<h2 style="margin-top:28px">Dành cho phụ huynh và giáo viên</h2>
+<p>Trang <b>Quan sát</b> (hoặc <b>Sổ điểm</b> ở bản chạy trên máy) cho thấy theo từng tuần: số ngày Hưng đã học, điểm bài kiểm tra, số bài nói đã gửi, thời điểm hoạt động gần nhất và nhận xét của giáo viên.</p>
+<div class="tablewrap"><table>
+<tr><th>Tiêu chí một tuần được tính là "Đạt tuần"</th><th>Mức cần có</th></tr>
+<tr><td>Số ngày học đã tick</td><td>Ít nhất 5 trên 6 ngày</td></tr>
+<tr><td>Bài kiểm tra cuối tuần</td><td>Từ 80% (12/15 câu). Tuần 6: cả hai đề thi thử từ 24/30</td></tr>
+<tr><td>Bài nói đã gửi cho giáo viên</td><td>Ít nhất 60% số bài nói của tuần</td></tr>
+</table></div>
+<p>Bảng cũng gắn cờ khi Hưng làm bài kiểm tra quá nhanh (dưới 12 giây mỗi câu), vì đó là dấu hiệu làm ẩu hoặc đoán. Số liệu do Hưng tự tick và tự nộp nên cần đối chiếu với bản ghi âm thực tế mà Hưng gửi.</p>
+`;
+WEEKS.push({
+n:1, title:"Was / were và địa điểm, kỳ nghỉ",
+sub:"Quá khứ của be",
+why:"Câu <i>He ___ home at six o'clock yesterday</i> bị sai ở Unit 8B. Từ pagoda, holiday, road, underground cũng sai ở bài Where I Live.",
+goals:["Dùng đúng was/were trong câu khẳng định, phủ định và câu hỏi","Nói về hôm qua, tuần trước, kỳ nghỉ vừa rồi","Viết đúng chính tả 20 từ về địa điểm và kỳ nghỉ"],
+days:[
+D("Học was / were",30,[
+ N("Ghi nhớ",`<p><b>Be</b> ở quá khứ chỉ có hai dạng: <b>was</b> và <b>were</b>.</p>
+ <div class="tablewrap"><table>
+ <tr><th></th><th>I / he / she / it</th><th>you / we / they</th></tr>
+ <tr><td>Khẳng định</td><td>I <b>was</b> at home.</td><td>They <b>were</b> at home.</td></tr>
+ <tr><td>Phủ định</td><td>He <b>wasn't</b> (was not) tired.</td><td>We <b>weren't</b> (were not) tired.</td></tr>
+ <tr><td>Câu hỏi</td><td><b>Was</b> she at work?</td><td><b>Were</b> you at work?</td></tr>
+ <tr><td>Trả lời ngắn</td><td>Yes, she <b>was</b>. / No, she <b>wasn't</b>.</td><td>Yes, we <b>were</b>. / No, we <b>weren't</b>.</td></tr>
+ </table></div>
+ <p><b>Từ chỉ thời gian đi cùng:</b> yesterday, last night, last week, last year, two days ago, in 2020, at six o'clock yesterday.</p>
+ <p><b>Mẹo:</b> khi trong câu không có động từ chính nào khác, dùng was/were. Nói <i>I was tired</i>, không nói <i>I did tired</i>.</p>
+ <p><b>Phát âm:</b> trong câu, <i>was</i> đọc nhẹ /wəz/, <i>were</i> đọc nhẹ /wə/. Khi trả lời ngắn mới nhấn mạnh: <i>Yes, I was.</i></p>`),
+ F("Bài 1. Điền was hoặc were","Đọc cả câu rồi mới điền. Chú ý chủ ngữ.",[
+  ["Yesterday I ___ at home.","was"],["They ___ in Hanoi last week.","were"],["She ___ tired last night.","was"],
+  ["We ___ at the cinema two hours ago.","were"],["The hotel ___ very clean.","was"],["My parents ___ at work yesterday.","were"],
+  ["It ___ cold on Sunday.","was"],["You ___ late for class yesterday.","were"],["The children ___ happy.","were"],["He ___ in Da Nang in 2023.","was"]]),
+ F("Bài 2. Hôm nay và hôm qua","Hôm nay là hiện tại, hôm qua là quá khứ. Điền was hoặc were.",[
+  ["Today they are happy. Yesterday they ___ sad.","were"],["Today it is hot. Yesterday it ___ cold.","was"],
+  ["Today I am at work. Last Sunday I ___ at home.","was"],["Today we are in class. Last night we ___ at a restaurant.","were"],
+  ["Today he is ill. Last week he ___ well.","was"],["Today the shops are open. Yesterday they ___ closed.","were"]]),
+ S("Đọc theo (shadowing)","Nghe mẫu rồi đọc theo từng câu. Mục tiêu là đọc tự nhiên, không đọc từng chữ rời.",
+  ["Bấm Nghe mẫu 3 lần.","Đọc theo từng câu, bắt chước nhịp.","Đọc cả đoạn 3 lần và ghi âm lần thứ ba.","Nghe lại và tự chấm."],
+  "Yesterday I was at home. My sister was with me. We were tired, so we were in bed at nine o'clock. It was a quiet day.",
+  ["Đọc was /wəz/ và were /wə/ nhẹ, không nhấn mạnh","Không dừng giữa câu quá 2 lần","Đọc rõ âm cuối của night, bed, quiet"])
+]),
+D("Phủ định và câu hỏi",30,[
+ N("Nhắc nhanh",`<p>Phủ định: <b>wasn't / weren't</b>. Câu hỏi: đưa <b>Was / Were</b> lên đầu câu.</p>
+ <p>Trả lời ngắn lặp lại was/were: <i>Were you tired? Yes, I was. / No, I wasn't.</i></p>`),
+ F("Bài 1. Viết phủ định","Điền dạng phủ định của be. Bạn có thể viết wasn't hoặc was not.",[
+  ["I ___ (not be) at work on Saturday.","wasn't|was not"],["They ___ (not be) happy with the hotel.","weren't|were not"],
+  ["The room ___ (not be) big.","wasn't|was not"],["We ___ (not be) in the same class.","weren't|were not"],
+  ["He ___ (not be) tired.","wasn't|was not"],["You ___ (not be) wrong.","weren't|were not"]]),
+ M("Bài 2. Chọn đáp án đúng","",[
+  ["___ you at home last night?","Were","Was","Are","Did"],["___ the food good?","Was","Were","Did","Is"],
+  ["Where ___ your parents yesterday?","were","was","did","are"],["___ she in the office on Monday?","Was","Were","Did","Is"],
+  ["Was he at school? No, he ___.","wasn't","weren't","didn't","isn't"],["Were they late? Yes, they ___.","were","was","did","are"],
+  ["How ___ the weather yesterday?","was","were","did","is"],["I ___ at the party. I stayed at home.","wasn't","weren't","didn't","am not"]]),
+ F("Bài 3. Trả lời ngắn","Điền một từ.",[
+  ["Were you at work yesterday? Yes, I ___.","was"],["Was she tired? No, she ___.","wasn't"],["Were they at the party? Yes, they ___.","were"],
+  ["Was the hotel expensive? No, it ___.","wasn't"],["Were you and Anna in class? Yes, we ___.","were"],["Was Tom ill? Yes, he ___.","was"]]),
+ S("Hỏi và đáp","Đọc từng câu hỏi trong danh sách, trả lời bằng câu đầy đủ khoảng 5–10 giây. Ghi cả 6 câu vào một bản ghi.",
+  ["Where were you at 8 pm yesterday?","How was your day?","Who was with you?","Were you tired last night?","Was the weather good yesterday?","Where were you last Sunday?"],
+  "At eight pm I was at home.\nMy day was busy but good.\nMy family was with me.\nYes, I was. I was very tired.\nNo, it wasn't. It was rainy.\nLast Sunday I was at my parents' house.",
+  ["Mình dùng was/were đúng ở cả 6 câu","Mình trả lời bằng câu đầy đủ, không chỉ nói Yes hoặc No","Mình nói đủ chậm để phát âm rõ"])
+]),
+D("Từ vựng địa điểm và kỳ nghỉ",35,[
+ V("20 từ cần viết đúng",[
+  ["pagoda","chùa","We visited a pagoda in Hue."],["holiday","kỳ nghỉ","My last holiday was in Phu Quoc."],["road","con đường","The road to the village is long."],
+  ["underground","tàu điện ngầm","We took the underground to the airport."],["tour","chuyến tham quan","The tour was two hours long."],["team","đội, nhóm","Our team was very good."],
+  ["beach","bãi biển","The beach was clean."],["mountain","núi","The mountain was cold and windy."],["museum","bảo tàng","The museum was closed on Monday."],
+  ["market","chợ","We bought fruit at the market."],["airport","sân bay","The airport was busy."],["station","nhà ga","I met her at the station."],
+  ["bridge","cây cầu","The bridge was very old."],["castle","lâu đài","They visited a castle in Hue."],["island","hòn đảo","We were on a small island."],
+  ["lake","hồ","The lake was beautiful."],["village","ngôi làng","My grandmother lives in a village."],["city centre","trung tâm thành phố","The hotel is in the city centre."],
+  ["countryside","miền quê","We spent a week in the countryside."],["ticket","vé","The tickets were cheap."]
+ ],"Bấm Nghe để nghe cách đọc. Bật Che nghĩa để tự kiểm tra."),
+ F("Bài 1. Tiếng Việt sang tiếng Anh","Gõ từ tiếng Anh. Chú ý chính tả.",[
+  ["chùa → ___","pagoda"],["kỳ nghỉ → ___","holiday"],["con đường → ___","road"],["tàu điện ngầm → ___","underground"],["chuyến tham quan → ___","tour"],["đội → ___","team"],
+  ["bãi biển → ___","beach"],["núi → ___","mountain"],["bảo tàng → ___","museum"],["sân bay → ___","airport"],["cây cầu → ___","bridge"],["ngôi làng → ___","village"]]),
+ F("Bài 2. Điền từ vào câu","Dùng các từ vừa học.",[
+  ["We took the ___ to the city centre. (tàu điện ngầm)","underground"],["The ___ in Hue was very old. (chùa)","pagoda"],["We stayed on a small ___ in the sea. (đảo)","island"],
+  ["I bought two ___ for the museum. (vé)","tickets"],["We were on ___ in Da Nang last summer. (kỳ nghỉ)","holiday"],["The ___ was closed on Monday. (bảo tàng)","museum"]]),
+ N("Cách nhớ chính tả: Nhìn – Nói – Che – Viết – Kiểm tra",`<ol><li>Nhìn từ và đọc to.</li><li>Che từ lại.</li><li>Viết từ ra giấy.</li><li>Mở ra và so sánh từng chữ cái.</li><li>Sai thì viết lại đúng 3 lần.</li></ol><p>Từ hay sai: <b>holiday</b> (một chữ l, một chữ d), <b>pagoda</b>, <b>underground</b> (hai từ ghép: under + ground).</p>`),
+ S("Đọc từ và câu ví dụ","Đọc to từng từ rồi đọc luôn câu ví dụ. Ghi âm 8 từ đầu tiên.",
+  ["Đọc từ, dừng nửa giây, đọc câu ví dụ.","Ghi âm 8 từ đầu tiên của bảng.","Nghe lại, đánh dấu từ nào đọc chưa rõ."],
+  "pagoda. We visited a pagoda in Hue.\nholiday. My last holiday was in Phu Quoc.\nroad. The road to the village is long.\nunderground. We took the underground to the airport.\ntour. The tour was two hours long.\nteam. Our team was very good.\nbeach. The beach was clean.\nmountain. The mountain was cold and windy.",
+  ["Mình đọc rõ âm cuối của road, team, beach","Mình đọc underground với trọng âm đúng, nhấn mạnh ở ground","Mình tự nghe ra ít nhất 1 từ cần đọc lại"])
+]),
+D("Đọc hiểu và chọn câu đúng",30,[
+ N("Bài đọc: Minh's weekend",`<p>Last weekend Minh was in Hoi An. It was a beautiful town. The weather was warm and sunny. His friends were with him. The hotel was near the beach and the rooms were very clean. The food was great, but the restaurant was expensive. On Sunday they were tired, so they weren't at the market in the evening.</p>`),
+ M("Bài 1. Hiểu bài đọc","",[
+  ["Where was Minh last weekend?","In Hoi An","In Hue","In Da Nang","At home"],["How was the weather?","Warm and sunny","Cold and rainy","Hot and windy","Cold and foggy"],
+  ["Who was with Minh?","His friends","His parents","His sister","Nobody"],["Where was the hotel?","Near the beach","In the city centre","Near the station","Near the market"],
+  ["What was expensive?","The restaurant","The hotel","The tickets","The market"],["Why weren't they at the market on Sunday evening?","They were tired","It was closed","It was raining","They were at the beach"]]),
+ M("Bài 2. Chọn câu đúng","Chọn câu không có lỗi.",[
+  ["Which sentence is correct?","My parents were in Hue.","My parents was in Hue.","My parents did in Hue.","My parents are in Hue yesterday."],
+  ["Which sentence is correct?","He was at home last night.","He were at home last night.","He did at home last night.","He is at home last night."],
+  ["Which sentence is correct?","We weren't at school yesterday.","We wasn't at school yesterday.","We didn't at school yesterday.","We not were at school yesterday."],
+  ["Which question is correct?","Were you in Hanoi last week?","Was you in Hanoi last week?","Did you in Hanoi last week?","Are you in Hanoi last week?"],
+  ["Which sentence is correct?","It was a long road.","It were a long road.","It did a long road.","It is a long road yesterday."],
+  ["Which sentence is correct?","The tickets were cheap.","The tickets was cheap.","The tickets did cheap.","The tickets be cheap."]]),
+ S("Kể lại bài đọc","Không nhìn bài, kể lại 'Minh's weekend' bằng lời của mình trong 30–40 giây.",
+  ["Đọc bài 2 lần.","Che bài lại, nhớ 4 ý: nơi chốn, thời tiết, khách sạn, đồ ăn.","Ghi âm lời kể.","Nghe lại và đếm số lần dùng was/were."],
+  "Last weekend Minh was in Hoi An. The weather was warm and sunny. His friends were with him. The hotel was near the beach and it was very clean. The food was great, but the restaurant was expensive. On Sunday they were tired.",
+  ["Mình nhắc được 4 ý chính","Mình dùng was/were ít nhất 5 lần và đúng cả","Mình nói liền mạch hơn lần đọc đầu"])
+]),
+D("Nói: Hôm qua của tôi",35,[
+ S("Kể về hôm qua hoặc cuối tuần qua (1 phút)","Dùng ít nhất 6 câu có was/were. Gợi ý: Where were you? Who was with you? How was the weather? How was the place or food? Were you tired?",
+  ["Nghĩ nhanh 5 ý, ghi từ khóa vào giấy (không viết cả câu).","Ghi âm lần 1.","Nghe lại, tìm 1 lỗi hoặc chỗ ngập ngừng.","Ghi âm lần 2 để sửa."],
+  "Last Sunday I was at my parents' house. It was a warm and sunny day. My brother and his wife were there too. The food was great because my mother cooked a lot. In the afternoon we were in the garden. We weren't tired, but we were very happy. It was a good day.",
+  ["Mình dùng was/were ít nhất 6 lần","Mình nói được ít nhất 40 giây","Lần 2 tốt hơn lần 1 ở ít nhất một điểm"]),
+ F("Ôn nhanh: was hay were?","8 câu cuối cùng trước bài kiểm tra.",[
+  ["The holiday ___ great.","was"],["My friends ___ in the pagoda.","were"],["___ the tour long? (Điền Was hoặc Were)","Was"],["We ___ not at the airport.","were"],
+  ["I ___ at the station at six o'clock.","was"],["The roads ___ empty.","were"],["There ___ a big mountain near the village.","was"],["She and I ___ on the same team.","were"]])
+]),
+D("Kiểm tra tuần 1",20,[
+ M("Bài kiểm tra tuần 1 (15 câu)","Làm chậm, đọc kỹ từng câu. Cần 12/15 câu đúng (80%).",[
+  ["We ___ in London last year.","were","was","are","did"],["She ___ at the bank yesterday.","was","were","did","is"],["___ the hotel clean?","Was","Were","Did","Is"],
+  ["They ___ at home. They were at the cinema.","weren't","wasn't","didn't","aren't"],["Where ___ you two days ago?","were","was","did","are"],["Was it cold? No, it ___.","wasn't","weren't","didn't","isn't"],
+  ["Which sentence is correct?","My parents were in Hue.","My parents was in Hue.","My parents did in Hue.","My parents is in Hue."],["A Buddhist temple in Vietnam is a ___.","pagoda","tour","bridge","ticket"],
+  ["A train that goes under a city is the ___.","underground","airport","museum","countryside"],["Which spelling is correct?","holiday","holyday","holliday","holidai"],
+  ["The ___ to the village was long and narrow.","road","team","tour","beach"],["How ___ your weekend?","was","were","did","is"],
+  ["Yesterday at 6 pm I ___ at the airport.","was","were","did","am"],["Linh and I ___ in the same team.","were","was","did","are"],["Was he at work? Yes, he ___.","was","were","did","is"]
+ ],"w1")
+])
+]});
+WEEKS.push({
+n:2, title:"Quá khứ đơn và câu hỏi với did",
+sub:"Động từ thường và bất quy tắc",
+why:"Ở Unit 9B, các chỗ trống <i>Where ___ you go on holiday last year?</i> và <i>What ___ the weather like?</i> bị sai. Hưng cần phân biệt did với was/were.",
+goals:["Chia đúng quá khứ của động từ thường (-ed) và 20 động từ bất quy tắc","Hỏi và đáp với did, didn't mà không nói didn't went","Nói về kỳ nghỉ và thời tiết bằng 8–10 câu"],
+days:[
+D("Động từ thường: -ed",30,[
+ N("Ghi nhớ",`<div class="tablewrap"><table>
+ <tr><th>Quy tắc</th><th>Ví dụ</th></tr>
+ <tr><td>Thêm -ed</td><td>work → worked, visit → visited, play → played</td></tr>
+ <tr><td>Kết thúc bằng -e: thêm -d</td><td>like → liked, live → lived, arrive → arrived</td></tr>
+ <tr><td>Phụ âm + y: đổi thành -ied</td><td>study → studied, carry → carried</td></tr>
+ <tr><td>Một nguyên âm + một phụ âm: gấp đôi phụ âm</td><td>stop → stopped, plan → planned</td></tr>
+ </table></div>
+ <p><b>Phát âm -ed:</b> /t/ sau âm vô thanh (worked, watched), /d/ sau âm hữu thanh (played, lived), /ɪd/ sau t hoặc d (wanted, decided).</p>`),
+ F("Bài 1. Chuyển sang quá khứ","Gõ dạng quá khứ.",[
+  ["visit → ___","visited"],["like → ___","liked"],["study → ___","studied"],["stop → ___","stopped"],["play → ___","played"],["travel → ___","travelled|traveled"],
+  ["watch → ___","watched"],["cook → ___","cooked"],["carry → ___","carried"],["plan → ___","planned"],["arrive → ___","arrived"],["decide → ___","decided"]]),
+ F("Bài 2. Điền câu","Điền dạng quá khứ của động từ trong ngoặc.",[
+  ["Last weekend we ___ (clean) the house.","cleaned"],["She ___ (work) late on Friday.","worked"],["I ___ (call) my mother yesterday.","called"],
+  ["They ___ (walk) to school.","walked"],["He ___ (study) English last night.","studied"],["We ___ (stay) in a small hotel.","stayed"],
+  ["The film ___ (start) at eight.","started"],["I ___ (want) a coffee.","wanted"]]),
+ M("Bài 3. Âm -ed","Chọn cách đọc đúng của đuôi -ed.",[
+  ["worked","/t/","/d/","/ɪd/","/s/"],["played","/d/","/t/","/ɪd/","/z/"],["wanted","/ɪd/","/t/","/d/","/s/"],
+  ["watched","/t/","/d/","/ɪd/","/z/"],["decided","/ɪd/","/t/","/d/","/s/"],["lived","/d/","/t/","/ɪd/","/s/"]]),
+ S("Đọc theo","Đọc đoạn văn sau, chú ý âm cuối -ed. Đọc 3 lần và ghi âm lần thứ ba.",
+  ["Nghe mẫu 2 lần.","Đọc chậm, phát âm rõ -ed.","Ghi âm lần thứ ba, nói tự nhiên hơn."],
+  "Last weekend I visited my grandmother. We cooked dinner and watched a film. I stayed there until ten o'clock, and then I walked home.",
+  ["visited đọc đuôi /ɪd/","cooked, watched, walked đọc đuôi /t/","stayed đọc đuôi /d/"])
+]),
+D("Động từ bất quy tắc",40,[
+ V("20 động từ bất quy tắc quan trọng",[
+  ["go → went","đi","Last year we went to Da Nang."],["see → saw","thấy","We saw a lion at the zoo."],["have → had","có, ăn","He had a big breakfast."],
+  ["buy → bought","mua","She bought a new dress."],["eat → ate","ăn","They ate noodles for lunch."],["take → took","lấy, đi (xe)","I took a taxi to the airport."],
+  ["make → made","làm","My mum made a cake."],["come → came","đến","He came home late."],["get → got","nhận, đến","I got a message from Anna."],
+  ["give → gave","cho","She gave me a ticket."],["write → wrote","viết","She wrote an email last night."],["meet → met","gặp","We met at the station."],
+  ["drink → drank","uống","He drank a cup of tea."],["sleep → slept","ngủ","He slept for ten hours."],["leave → left","rời đi","We left the hotel at eight."],
+  ["find → found","tìm thấy","I found my keys."],["think → thought","nghĩ","I thought it was a good idea."],["say → said","nói","He said hello."],
+  ["run → ran","chạy","They ran to the bus stop."],["swim → swam","bơi","We swam in the sea."]
+ ],"Học 5 động từ mỗi ngày trong tuần, rồi ôn lại cả danh sách vào cuối tuần."),
+ F("Bài 1. Quá khứ của động từ","Gõ dạng quá khứ.",[
+  ["go → ___","went"],["see → ___","saw"],["have → ___","had"],["buy → ___","bought"],["eat → ___","ate"],["take → ___","took"],["make → ___","made"],["come → ___","came"],
+  ["get → ___","got"],["give → ___","gave"],["write → ___","wrote"],["meet → ___","met"],["drink → ___","drank"],["sleep → ___","slept"],["leave → ___","left"]]),
+ F("Bài 2. Điền câu","Điền dạng quá khứ của động từ trong ngoặc.",[
+  ["I ___ (go) to the market yesterday.","went"],["We ___ (see) a lion at the zoo.","saw"],["She ___ (buy) a new dress.","bought"],["He ___ (have) a big breakfast.","had"],
+  ["They ___ (eat) noodles for lunch.","ate"],["I ___ (take) a taxi to the airport.","took"],["My mum ___ (make) a cake.","made"],["We ___ (meet) at the station.","met"],
+  ["She ___ (write) an email last night.","wrote"],["He ___ (sleep) for ten hours.","slept"]]),
+ S("Đọc danh sách","Đọc to 10 động từ đầu: nguyên mẫu rồi quá khứ, sau đó đọc luôn câu ví dụ. Ghi âm.",
+  ["Đọc cặp từ: go, went.","Đọc cả câu ví dụ.","Ghi âm 10 động từ đầu.","Nghe lại, đánh dấu những động từ nhớ chưa chắc."],
+  "go, went. Last year we went to Da Nang.\nsee, saw. We saw a lion at the zoo.\nhave, had. He had a big breakfast.\nbuy, bought. She bought a new dress.\neat, ate. They ate noodles for lunch.\ntake, took. I took a taxi to the airport.\nmake, made. My mum made a cake.\ncome, came. He came home late.\nget, got. I got a message from Anna.\ngive, gave. She gave me a ticket.",
+  ["Mình đọc đúng saw /sɔː/ và bought /bɔːt/","Mình không nhìn bảng khi đọc ít nhất 5 động từ","Mình đánh dấu được động từ cần ôn lại"])
+]),
+D("Phủ định và câu hỏi với did",40,[
+ N("Công thức và cái bẫy",`<div class="tablewrap"><table>
+ <tr><th>Khẳng định</th><th>Phủ định</th><th>Câu hỏi</th></tr>
+ <tr><td>She <b>went</b> to Hue.</td><td>She <b>didn't go</b> to Hue.</td><td><b>Did</b> she <b>go</b> to Hue?</td></tr>
+ </table></div>
+ <p><b>Cái bẫy:</b> sau <b>did / didn't</b> luôn là <b>động từ nguyên mẫu</b>. Nói <i>didn't go</i>, không nói <i>didn't went</i>. Nói <i>Did you see?</i>, không nói <i>Did you saw?</i></p>
+ <p><b>Câu hỏi Wh-:</b> Where <b>did</b> you go? What <b>did</b> you eat? Who <b>did</b> you meet?</p>
+ <p><b>Khi nào dùng was/were thay vì did:</b> khi động từ chính là <b>be</b>. <i>What was the weather like?</i> <i>How was the food?</i> <i>Where were you?</i></p>`),
+ F("Bài 1. Viết phủ định","Điền didn't + động từ nguyên mẫu.",[
+  ["I ___ (not go) to work on Sunday.","didn't go|did not go"],["She ___ (not eat) meat.","didn't eat|did not eat"],["We ___ (not see) the show.","didn't see|did not see"],
+  ["They ___ (not buy) anything.","didn't buy|did not buy"],["He ___ (not sleep) well.","didn't sleep|did not sleep"],["I ___ (not have) breakfast.","didn't have|did not have"]]),
+ M("Bài 2. Did hay was/were?","Chọn từ đúng. Đây là kiểu câu đã sai ở Unit 9B.",[
+  ["Where ___ you go on holiday last year?","did","was","were","do"],["What ___ the weather like?","was","did","were","do"],["___ you enjoy the film?","Did","Was","Were","Do"],
+  ["How ___ the hotel?","was","did","were","do"],["What ___ you eat for dinner?","did","was","were","do"],["Who ___ at the party?","was","did","were","do"],
+  ["___ they at home last night?","Were","Did","Was","Do"],["Where ___ she buy that dress?","did","was","were","do"],["Why ___ you late?","were","did","was","do"],["___ he call you yesterday?","Did","Was","Were","Does"]]),
+ F("Bài 3. Động từ sau did","Điền động từ nguyên mẫu của động từ trong ngoặc.",[
+  ["Where did you ___ (go) last summer?","go"],["What did they ___ (eat)?","eat"],["Did she ___ (see) the film?","see"],["Who did you ___ (meet)?","meet"],["Did he ___ (write) to you?","write"]]),
+ S("Hỏi và đáp với did","Trả lời 6 câu hỏi sau. Mỗi câu trả lời 1–2 câu đầy đủ, ghi âm một lần.",
+  ["Where did you go last weekend?","What did you eat?","Who did you meet?","Did you watch TV?","What did you buy?","How was the weather?"],
+  "Last weekend I went to my parents' house.\nI ate rice, fish and vegetables.\nI met my old friend.\nYes, I did. I watched a football match.\nI bought some fruit.\nIt was hot and sunny.",
+  ["Mình dùng went, ate, met, bought đúng","Mình không nói didn't went","Mình dùng was cho câu hỏi về thời tiết"])
+]),
+D("Thời tiết và bài đọc",35,[
+ V("12 từ về thời tiết",[
+  ["sunny","nắng","It was sunny and hot."],["rainy","mưa","It was a rainy day."],["windy","có gió","It was windy on the beach."],["cloudy","nhiều mây","The sky was cloudy."],
+  ["snowy","có tuyết","It was cold and snowy."],["cold","lạnh","It was very cold in the mountains."],["hot","nóng","It was hot in the city."],["warm","ấm","The weather was warm."],
+  ["cool","mát","The evening was cool."],["foggy","có sương mù","It was foggy in the morning."],["storm","cơn bão","There was a big storm last night."],["wet","ướt","My shoes were wet."]
+ ],"Câu hỏi thường gặp: What was the weather like? It was sunny and warm."),
+ F("Bài 1. Chính tả từ thời tiết","Gõ từ tiếng Anh.",[
+  ["nắng → ___","sunny"],["mưa (tính từ) → ___","rainy"],["có gió → ___","windy"],["nhiều mây → ___","cloudy"],["có sương mù → ___","foggy"],["cơn bão → ___","storm"],["ấm → ___","warm"],["ướt → ___","wet"]]),
+ N("Bài đọc: Anna's trip to Da Lat",`<p>Last December Anna went to Da Lat with her sister. They took a night bus and arrived at six in the morning. It was cold and foggy, so they bought two warm jackets. They visited a flower garden and ate hot noodles. In the afternoon it rained, so they didn't walk around the lake. They stayed in a small hotel near the market. The room was simple but clean. On the last day they bought coffee for their family and came home by bus.</p>`),
+ M("Bài 2. Hiểu bài đọc","",[
+  ["Who did Anna go with?","Her sister","Her mother","Her friends","Nobody"],["How did they travel?","By night bus","By train","By plane","By taxi"],
+  ["What was the weather like in the morning?","Cold and foggy","Hot and sunny","Windy and wet","Warm and cloudy"],["Why did they buy jackets?","Because it was cold","Because it was a gift","Because it rained","Because it was cheap"],
+  ["What didn't they do in the afternoon?","Walk around the lake","Visit the flower garden","Eat noodles","Buy coffee"],["What was the hotel like?","Simple but clean","Big and expensive","Dirty but cheap","Near the lake"]]),
+ F("Bài 3. Điền động từ vào câu","Dùng bài đọc để điền dạng quá khứ.",[
+  ["Last December Anna ___ (go) to Da Lat.","went"],["They ___ (take) a night bus.","took"],["It was cold, so they ___ (buy) warm jackets.","bought"],
+  ["They ___ (visit) a flower garden.","visited"],["They ___ (eat) hot noodles.","ate"],["They didn't ___ (walk) around the lake.","walk"],["They ___ (stay) in a small hotel.","stayed"],["They ___ (come) home by bus.","came"]])
+]),
+D("Nói: Kỳ nghỉ của tôi",35,[
+ S("Luyện phát âm -ed","Đọc 10 từ, chú ý ba âm cuối. Ghi âm.",
+  ["Nhóm /t/: worked, watched, stopped.","Nhóm /d/: played, lived, cleaned.","Nhóm /ɪd/: wanted, visited, decided, needed."],
+  "worked, watched, stopped.\nplayed, lived, cleaned.\nwanted, visited, decided, needed.",
+  ["Mình đọc nhóm /ɪd/ thành hai âm tiết rõ ràng","Mình không thêm âm /ɪd/ vào nhóm /t/ và /d/","Mình đọc cả 10 từ không dừng"]),
+ S("Kể về kỳ nghỉ gần nhất (1 phút)","Dùng ít nhất 5 động từ bất quy tắc và 2 từ về thời tiết. Gợi ý: Where did you go? Who did you go with? What did you do? What was the weather like?",
+  ["Ghi từ khóa vào giấy.","Ghi âm lần 1.","Nghe lại, đếm lỗi didn't + V-ed hoặc did + V-ed.","Ghi âm lần 2."],
+  "Last summer I went to Phu Quoc with my family. We took a plane and stayed in a small hotel near the beach. The weather was hot and sunny. We swam in the sea and ate fresh seafood. I bought some gifts for my friends. We didn't have a bad day. It was a great holiday.",
+  ["Mình dùng went, took, swam, ate, bought, had đúng","Mình nói được ít nhất 40 giây","Mình nhắc đến thời tiết bằng was"])
+]),
+D("Kiểm tra tuần 2",20,[
+ M("Bài kiểm tra tuần 2 (15 câu)","Cần 12/15 câu đúng (80%).",[
+  ["The past of 'go' is ___.","went","goed","gone","goes"],["The past of 'study' is ___.","studied","studyed","studed","studies"],["She ___ to the cinema last night.","went","goed","go","gone"],
+  ["I ___ see him yesterday.","didn't","wasn't","don't","not"],["___ you have breakfast this morning?","Did","Was","Were","Do"],["What ___ the weather like?","was","did","were","do"],
+  ["How do we say -ed in 'wanted'?","/ɪd/","/t/","/d/","/s/"],["They didn't ___ the film.","enjoy","enjoyed","enjoying","enjoys"],["We ___ dinner at a restaurant.","ate","eat","eaten","eated"],
+  ["Where ___ you buy it?","did","was","were","do"],["Which sentence is correct?","He didn't come to class.","He didn't came to class.","He not come to class.","He wasn't come to class."],["The past of 'buy' is ___.","bought","buyed","buy","boughted"],
+  ["It was ___ so I took an umbrella.","rainy","sunny","hot","dry"],["Did she ___ you a message?","write","wrote","written","writes"],["Last year we ___ in Hanoi for a week.","stayed","stay","stays","staying"]
+ ],"w2")
+])
+]});
+WEEKS.push({
+n:3, title:"Nghề nghiệp, khách sạn và chính tả",
+sub:"Từ vựng Unit 5B, Unit 6 và present simple",
+why:"Bài Unit 5B (khách sạn) chỉ đạt 50% và Unit 6 đạt 67%. Các từ sai gồm blanket, pillow, shower, ground floor, manager, restaurant, favourite, businessman, receptionist, bank worker, taxi driver, chef, IT worker.",
+goals:["Viết đúng 20 từ nghề nghiệp và 24 từ khách sạn","Chia đúng động từ ngôi he/she/it ở hiện tại đơn","Đóng vai nhận phòng khách sạn bằng tiếng Anh"],
+days:[
+D("Từ vựng nghề nghiệp",35,[
+ V("20 nghề nghiệp",[
+  ["businessman / businesswoman","doanh nhân","He is a businessman."],["office worker","nhân viên văn phòng","My sister is an office worker."],["receptionist","lễ tân","The receptionist is very friendly."],
+  ["bank worker","nhân viên ngân hàng","She is a bank worker."],["taxi driver","tài xế taxi","A taxi driver works at night."],["chef","đầu bếp","The chef cooks Italian food."],
+  ["IT worker","nhân viên công nghệ thông tin","He is an IT worker."],["manager","quản lý","The manager is in the office."],["waiter","nhân viên phục vụ nam","The waiter brings the menu."],
+  ["nurse","y tá","A nurse works in a hospital."],["farmer","nông dân","My uncle is a farmer."],["engineer","kỹ sư","She is a software engineer."],
+  ["teacher","giáo viên","My teacher is kind."],["shop assistant","nhân viên bán hàng","The shop assistant helps me."],["police officer","cảnh sát","A police officer works outside."],
+  ["mechanic","thợ máy","The mechanic fixes cars."],["doctor","bác sĩ","The doctor is at the hospital."],["pilot","phi công","A pilot flies a plane."],
+  ["singer","ca sĩ","My friend is a singer."],["accountant","kế toán","The accountant works with numbers."]
+ ],"Chú ý a và an: a chef, an engineer, an IT worker, an office worker."),
+ F("Bài 1. Tiếng Việt sang tiếng Anh","Gõ nghề nghiệp bằng tiếng Anh.",[
+  ["lễ tân → ___","receptionist"],["đầu bếp → ___","chef"],["kỹ sư → ___","engineer"],["nhân viên ngân hàng → ___","bank worker"],["tài xế taxi → ___","taxi driver"],["quản lý → ___","manager"],
+  ["nhân viên văn phòng → ___","office worker"],["doanh nhân (nam) → ___","businessman"],["nông dân → ___","farmer"],["kế toán → ___","accountant"],["phi công → ___","pilot"],["nhân viên bán hàng → ___","shop assistant"]]),
+ N("Trọng âm: đọc đúng giúp nhớ chính tả",`<p>receptionist: re-<b>CEP</b>-shun-ist · engineer: en-gi-<b>NEER</b> · accountant: a-<b>COUNT</b>-ant · businessman: <b>BUS</b>-ness-man · mechanic: me-<b>CHAN</b>-ic</p><p>Khi đọc, hãy chia từ thành âm tiết và viết từng âm tiết: re-cep-tion-ist.</p>`),
+ S("Đọc 20 nghề nghiệp","Đọc to từng nghề, đọc cả câu ví dụ nếu có thể. Ghi âm.",
+  ["Đọc 5 từ một lần, nhấn đúng trọng âm.","Ghi âm cả 20 từ.","Nghe lại và đánh dấu từ nào bị nhầm trọng âm."],
+  "businessman, office worker, receptionist, bank worker, taxi driver.\nchef, IT worker, manager, waiter, nurse.\nfarmer, engineer, teacher, shop assistant, police officer.\nmechanic, doctor, pilot, singer, accountant.",
+  ["Mình nhấn đúng receptionist, engineer, accountant","Mình đọc rõ hai từ trong bank worker và taxi driver","Mình ghi lại 3 từ phải ôn thêm"])
+]),
+D("Hiện tại đơn: he / she / it",30,[
+ N("Ghi nhớ",`<div class="tablewrap"><table>
+ <tr><th>Quy tắc</th><th>Ví dụ</th></tr>
+ <tr><td>Thêm -s</td><td>work → works, drive → drives, cook → cooks</td></tr>
+ <tr><td>ch, sh, s, x, o: thêm -es</td><td>teach → teaches, wash → washes, fix → fixes, go → goes</td></tr>
+ <tr><td>Phụ âm + y: đổi thành -ies</td><td>study → studies, carry → carries</td></tr>
+ <tr><td>Bất quy tắc</td><td>have → has</td></tr>
+ </table></div>
+ <p>Phủ định: He <b>doesn't work</b>. Câu hỏi: <b>Does</b> she <b>work</b> here? Sau doesn't và does là động từ nguyên mẫu, không thêm -s.</p>`),
+ F("Bài 1. Chia động từ","Điền dạng đúng của động từ trong ngoặc.",[
+  ["A receptionist ___ (work) in a hotel.","works"],["My brother ___ (teach) English.","teaches"],["She ___ (study) at night.","studies"],["He ___ (go) to work by bus.","goes"],
+  ["A chef ___ (cook) food.","cooks"],["The nurse ___ (have) lunch at one.","has"],["My father ___ (watch) the news.","watches"],["A taxi driver ___ (drive) all day.","drives"],
+  ["She ___ (fix) computers.","fixes"],["He ___ (wash) the dishes.","washes"]]),
+ M("Bài 2. Chọn đáp án đúng","",[
+  ["She ___ in a bank.","works","work","working","worked"],["Does he ___ English?","speak","speaks","speaking","spoke"],["He doesn't ___ meat.","eat","eats","eating","ate"],
+  ["My mum ___ at a school.","teaches","teach","teachs","teaching"],["___ your sister work in an office?","Does","Do","Is","Did"],["He ___ TV every night.","watches","watch","watchs","watching"],
+  ["She ___ any brothers.","doesn't have","don't have","doesn't has","hasn't"],["What ___ your father do?","does","do","is","did"]]),
+ S("Hỏi và đáp về công việc","Đọc câu hỏi và trả lời. Ghi âm một lần.",
+  ["What do you do?","Where do you work?","What does your friend do?","Where does he or she work?","Does he or she like the job?"],
+  "I'm an engineer.\nI work in an office in Hanoi.\nMy friend is a nurse.\nShe works in a hospital.\nYes, she does. She likes helping people.",
+  ["Mình dùng works/does đúng với he/she","Mình dùng a hoặc an đúng trước nghề nghiệp","Mình trả lời bằng câu đầy đủ"])
+]),
+D("Từ vựng khách sạn",35,[
+ V("24 từ khách sạn và nơi ở",[
+  ["hotel","khách sạn","The hotel is near the beach."],["hostel","nhà trọ cho du khách","A hostel is cheap."],["guest","khách","The guest is at reception."],["reception","quầy lễ tân","Reception is on the ground floor."],
+  ["single room","phòng đơn","I want a single room."],["double room","phòng đôi","We booked a double room."],["bunk bed","giường tầng","The hostel has bunk beds."],["key","chìa khóa","Here is your key."],
+  ["towel","khăn tắm","I need a clean towel."],["blanket","chăn","It's cold. I need a blanket."],["pillow","gối","The pillow is soft."],["shower","vòi sen","The shower is hot."],
+  ["bathroom","phòng tắm","The bathroom is clean."],["ground floor","tầng trệt","The restaurant is on the ground floor."],["first floor","tầng một","The pool is on the first floor."],["lift","thang máy","The lift is over there."],
+  ["stairs","cầu thang","Take the stairs."],["swimming pool","hồ bơi","The swimming pool is open."],["restaurant","nhà hàng","The restaurant is very good."],["breakfast","bữa sáng","Breakfast is at seven."],
+  ["review","bài đánh giá","I read the hotel reviews."],["manager","quản lý","The manager is friendly."],["favourite","yêu thích","My favourite room is 305."],["simple","đơn giản","The room is simple but clean."]
+ ],"Từ hay sai: blanket, pillow, shower, ground floor, manager, restaurant, favourite."),
+ F("Bài 1. Chính tả từ khách sạn","Gõ từ tiếng Anh.",[
+  ["chăn → ___","blanket"],["gối → ___","pillow"],["vòi sen → ___","shower"],["tầng trệt → ___","ground floor"],["hồ bơi → ___","swimming pool"],["đánh giá → ___","review"],
+  ["yêu thích → ___","favourite|favorite"],["nhà hàng → ___","restaurant"],["quản lý → ___","manager"],["khách → ___","guest"],["thang máy → ___","lift"],["chìa khóa → ___","key"]]),
+ M("Bài 2. Đoán từ qua định nghĩa","",[
+  ["A person who stays in a hotel","guest","manager","chef","waiter"],["You use it to open the door","key","towel","pillow","lift"],["You use it after a shower","towel","blanket","key","stairs"],
+  ["The floor at the bottom of a building","ground floor","first floor","lift","reception"],["A person who works at the front desk in a hotel","receptionist","manager","guest","chef"],
+  ["A cheap place with shared rooms for travellers","hostel","hotel","restaurant","bank"],["A room for one person","single room","double room","bunk bed","bathroom"],["You put it on your bed when it is cold","blanket","towel","key","shower"]]),
+ S("Đọc từ khách sạn","Đọc to 12 từ đầu của bảng và câu ví dụ. Ghi âm.",
+  ["Đọc từng từ rồi đọc câu ví dụ.","Ghi âm 12 từ đầu.","Nghe lại và nghe chính tả bằng tai: có từ nào nghe khác với chữ viết không?"],
+  "hotel. The hotel is near the beach.\nhostel. A hostel is cheap.\nguest. The guest is at reception.\nreception. Reception is on the ground floor.\nsingle room. I want a single room.\ndouble room. We booked a double room.\nbunk bed. The hostel has bunk beds.\nkey. Here is your key.\ntowel. I need a clean towel.\nblanket. It's cold. I need a blanket.\npillow. The pillow is soft.\nshower. The shower is hot.",
+  ["Mình đọc rõ hai âm tiết của pillow và blanket","Mình đọc đúng ground floor","Mình đọc liền mạch cả 12 từ"])
+]),
+D("Nhận phòng khách sạn",35,[
+ N("Hội thoại nhận phòng",`<p><b>Receptionist:</b> Good evening. Can I help you?<br>
+ <b>Guest:</b> Hello. I have a reservation. My name is Tuan Hung.<br>
+ <b>Receptionist:</b> Let me check. Yes, a double room for two nights.<br>
+ <b>Guest:</b> Is breakfast included?<br>
+ <b>Receptionist:</b> Yes. Breakfast is from half past six to half past nine in the restaurant on the ground floor.<br>
+ <b>Guest:</b> Great. Is there a swimming pool?<br>
+ <b>Receptionist:</b> Yes, it's on the first floor. Here is your key. Room 305. The lift is over there.<br>
+ <b>Guest:</b> Thank you very much.<br>
+ <b>Receptionist:</b> Enjoy your stay!</p>`),
+ M("Bài 1. Hiểu hội thoại","",[
+  ["How many nights is the room for?","Two","One","Three","Four"],["Where is breakfast?","In the restaurant on the ground floor","In the room","On the first floor","At reception"],
+  ["What is the room number?","305","350","503","315"],["Where is the swimming pool?","On the first floor","On the ground floor","Next to the lift","In the restaurant"],
+  ["Is breakfast included?","Yes","No","Only on Sunday","Only for two nights"],["What does the receptionist say at the end?","Enjoy your stay!","Good luck!","See you!","Have a nice trip!"]]),
+ F("Bài 2. Điền từ vào hội thoại","Dùng hội thoại phía trên.",[
+  ["Good evening. Can I ___ you?","help"],["I have a ___.","reservation"],["Is breakfast ___?","included"],["Here is your ___. Room 305.","key"],["The ___ is over there.","lift"],["___ your stay!","Enjoy"]]),
+ S("Đóng vai nhận phòng","Đọc hội thoại hai lần, mỗi lần đóng một vai. Sau đó thử nói không nhìn bài. Ghi âm lần cuối.",
+  ["Đọc vai Receptionist.","Đọc vai Guest.","Đổi vai, đọc lại.","Thử nói không nhìn bài và ghi âm."],
+  "Receptionist: Good evening. Can I help you?\nGuest: Hello. I have a reservation. My name is Tuan Hung.\nReceptionist: Let me check. Yes, a double room for two nights.\nGuest: Is breakfast included?\nReceptionist: Yes. Breakfast is in the restaurant on the ground floor.\nGuest: Great. Is there a swimming pool?\nReceptionist: Yes, it's on the first floor. Here is your key. Room 305.\nGuest: Thank you very much.\nReceptionist: Enjoy your stay!",
+  ["Mình nói được câu hỏi Is breakfast included? và Is there a swimming pool? không nhìn bài","Mình nói số phòng và số đêm rõ ràng","Mình dùng ngữ điệu lịch sự"])
+]),
+D("Nói: Công việc và khách sạn của tôi",35,[
+ S("Giới thiệu công việc (1 phút)","Dùng present simple với I và he/she. Gợi ý: I work as… I start at… I like… My colleague… He/She works in…",
+  ["Viết 5 từ khóa.","Ghi âm lần 1.","Nghe lại, kiểm tra -s ở ngôi he/she.","Ghi âm lần 2."],
+  "I work as an engineer in Hanoi. I start work at eight o'clock and finish at five. I like my job because I learn new things. My colleague Lan is an accountant. She works in the same office. She starts work at half past eight. She likes numbers.",
+  ["Mình thêm -s đúng ở works, starts, likes","Mình nói được ít nhất 40 giây","Mình dùng a hoặc an đúng"]),
+ S("Mô tả một khách sạn (1 phút)","Dùng từ vừa học: room, breakfast, shower, blanket, favourite, simple.",
+  ["Nhớ lại một khách sạn bạn từng ở.","Ghi âm lần 1.","Nghe lại, đếm từ vựng mới đã dùng.","Ghi âm lần 2 và dùng thêm 2 từ."],
+  "I stayed in a small hotel in Hue last year. The room was simple but clean. The bed was big and the pillow was soft. The shower was hot. Breakfast was in the restaurant on the ground floor. The manager was very friendly. My favourite part was the swimming pool.",
+  ["Mình dùng ít nhất 5 từ từ bảng khách sạn","Mình dùng was/were đúng","Mình đọc rõ restaurant và favourite"]),
+ F("Ôn từ vựng trộn","10 từ từ cả hai chủ đề.",[
+  ["Someone who cooks in a restaurant: ___","chef"],["You sleep with your head on a ___.","pillow"],["A person in charge of a hotel: ___","manager"],["Someone who drives a taxi: ___","taxi driver"],
+  ["You wash with a ___.","shower"],["The floor at street level: ___ floor","ground"],["Someone who works with computers: ___ worker","IT"],["A person who works at a bank: ___ worker","bank"],["Not complicated: ___","simple"],["The person at the front desk: ___","receptionist"]])
+]),
+D("Kiểm tra tuần 3",20,[
+ M("Bài kiểm tra tuần 3 (15 câu)","Cần 12/15 câu đúng (80%). Đọc kỹ chính tả từng đáp án.",[
+  ["A person who works at the front desk in a hotel is a ___.","receptionist","manager","chef","guest"],["Which spelling is correct?","receptionist","recepcionist","receptionnist","receptonist"],["He ___ in a bank.","works","work","working","worked"],
+  ["My sister ___ English at a school.","teaches","teach","teachs","teaching"],["___ she work on Saturdays?","Does","Do","Is","Did"],["You sleep under a ___ in cold weather.","blanket","towel","key","lift"],
+  ["Which spelling is correct?","pillow","pilow","pillo","pilloe"],["I stayed on the ___ floor, next to the restaurant.","ground","grund","groun","grounded"],["He doesn't ___ in an office.","work","works","working","worked"],
+  ["A person who cooks in a restaurant is a ___.","chef","waiter","nurse","pilot"],["The hotel ___ is the person in charge.","manager","guest","farmer","singer"],["The room was ___ but clean.","simple","simply","simplify","simples"],
+  ["Which spelling is correct?","favourite","favorit","faverite","favourit"],["What does your father ___?","do","does","doing","did"],["A ___ drives people around a city in a car.","taxi driver","bank worker","chef","engineer"]
+ ],"w3")
+])
+]});
+WEEKS.push({
+n:4, title:"Quần áo, ngôi nhà, this/that và sở hữu cách",
+sub:"Từ vựng Unit 7B, 10A và các điểm ngữ pháp Unit 7",
+why:"Unit 7B chỉ đạt 70% với các từ rất cơ bản: glasses, shirt, skirt, dress, jeans. Câu <i>Kate and Giuseppe's children → their children</i> cũng bị sai. Unit 10A có desk, window, floor.",
+goals:["Viết đúng 20 từ quần áo và 22 từ về ngôi nhà","Phân biệt this/that/these/those và dùng is/are đúng với glasses, jeans","Dùng 's và đại từ sở hữu: his, her, their, its"],
+days:[
+D("Từ vựng quần áo",35,[
+ V("20 từ về quần áo",[
+  ["glasses","kính (mắt)","These glasses are new."],["shirt","áo sơ mi","He is wearing a white shirt."],["skirt","chân váy","She has a red skirt."],["dress","đầm","This dress is beautiful."],
+  ["jeans","quần jean","My jeans are blue."],["trousers","quần dài","His trousers are black."],["shoes","giày","These shoes are small."],["trainers","giày thể thao","I wear trainers to class."],
+  ["jacket","áo khoác","It's cold. Take a jacket."],["coat","áo choàng dài","She has a long coat."],["hat","mũ","He is wearing a hat."],["cap","mũ lưỡi trai","This cap is cool."],
+  ["socks","tất, vớ","My socks are wet."],["T-shirt","áo thun","This is Greg's T-shirt."],["jumper","áo len","I have a green jumper."],["shorts","quần short","Those shorts are small."],
+  ["scarf","khăn quàng","I wear a scarf in winter."],["boots","bốt","Her boots are brown."],["tie","cà vạt","He wears a tie to work."],["belt","thắt lưng","I need a new belt."]
+ ],"Màu sắc: red, blue, green, yellow, black, white, grey, brown, pink, orange, purple."),
+ N("Danh từ chỉ có dạng số nhiều",`<p><b>glasses, jeans, trousers, shorts, socks, shoes</b> thường dùng với <b>are</b> và <b>these/those</b>.</p>
+ <p>These jeans <b>are</b> new. Where <b>are</b> my glasses? Muốn nói một cái, dùng <b>a pair of</b>: <i>a pair of jeans</i>, <i>a pair of shoes</i>.</p>`),
+ F("Bài 1. Chính tả quần áo","Gõ từ tiếng Anh.",[
+  ["kính → ___","glasses"],["áo sơ mi → ___","shirt"],["chân váy → ___","skirt"],["đầm → ___","dress"],["quần jean → ___","jeans"],["quần dài → ___","trousers"],
+  ["giày → ___","shoes"],["áo khoác → ___","jacket"],["mũ → ___","hat"],["tất → ___","socks"],["áo thun → ___","T-shirt|t-shirt|tshirt"],["quần short → ___","shorts"]]),
+ M("Bài 2. Is hay are?","",[
+  ["My jeans ___ blue.","are","is","am","be"],["Where ___ my glasses?","are","is","am","was"],["This skirt ___ nice.","is","are","am","be"],["Those shorts ___ small.","are","is","am","be"],
+  ["I need a new ___ of trousers.","pair","couple","set","piece"],["Her shoes ___ new.","are","is","am","be"],["That jacket ___ expensive.","is","are","am","be"],["My socks ___ wet.","are","is","am","be"]]),
+ S("Hôm nay bạn mặc gì?","Mô tả quần áo bạn đang mặc, hoặc quần áo bạn mặc hôm qua. Ghi âm.",
+  ["Nhìn vào gương hoặc nhớ lại.","Nói 4–5 câu.","Dùng màu sắc."],
+  "Today I'm wearing a blue shirt, black trousers and white trainers. I'm also wearing glasses. My jacket is on the chair. It's grey. My socks are black.",
+  ["Mình dùng am/is/are đúng","Mình nói tên màu trước tên quần áo","Mình đọc rõ trousers và glasses"])
+]),
+D("This/that/these/those và 's",35,[
+ N("Ghi nhớ",`<div class="tablewrap"><table>
+ <tr><th></th><th>Gần</th><th>Xa</th></tr>
+ <tr><td>Số ít</td><td><b>this</b> (This is my bag.)</td><td><b>that</b> (That is your bag.)</td></tr>
+ <tr><td>Số nhiều</td><td><b>these</b> (These are my shoes.)</td><td><b>those</b> (Those are your shoes.)</td></tr>
+ </table></div>
+ <p><b>Sở hữu cách 's:</b> Greg's T-shirt, Kate's bag, the children's toys, my parents' house (danh từ số nhiều kết thúc bằng s chỉ thêm dấu ').</p>
+ <p><b>Cái bẫy ở Unit 7B:</b> <i>Kate and Giuseppe's children → <b>their</b> children</i>.</p>
+ <div class="tablewrap"><table>
+ <tr><th>Sở hữu cách</th><th>Đại từ sở hữu</th></tr>
+ <tr><td>Greg's T-shirt</td><td><b>his</b> T-shirt</td></tr>
+ <tr><td>Kate's bag</td><td><b>her</b> bag</td></tr>
+ <tr><td>Kate and Giuseppe's children</td><td><b>their</b> children</td></tr>
+ <tr><td>the dog's bed</td><td><b>its</b> bed</td></tr>
+ </table></div>`),
+ M("Bài 1. This, that, these hay those?","Nhìn vào chỉ dẫn trong ngoặc.",[
+  ["___ is my phone. (in my hand)","This","That","These","Those"],["___ are my shoes. (on my feet)","These","Those","This","That"],["Look at ___ birds over there.","those","these","this","that"],
+  ["Is ___ your bag? (on the other side of the room)","that","this","these","those"],["How much are ___ jeans? (in a shop, next to you)","these","those","this","that"],["___ is a nice day!","This","These","Those","They"],
+  ["___ people over there are my friends.","Those","These","This","That"],["What's ___? (near you, one thing)","this","these","those","they"]]),
+ F("Bài 2. Đổi sang đại từ sở hữu","Điền his, her, their, its.",[
+  ["This is Greg's T-shirt. It's ___ T-shirt.","his"],["That is Kate's bag. It's ___ bag.","her"],["Kate and Giuseppe's children → ___ children","their"],
+  ["Those are my parents' shoes. They're ___ shoes.","their"],["It is the dog's bed. It's ___ bed.","its"],["That's Tom and Sue's house. It's ___ house.","their"]]),
+ F("Bài 3. Thêm 's hoặc '","Điền cụm từ hoàn chỉnh.",[
+  ["the bag of my sister → my ___ bag","sister's"],["the toys of the children → the ___ toys","children's"],["the car of Tom → ___ car","Tom's"],["the room of my parents → my ___ room","parents'"],["Whose bag is it? It's ___. (Mai)","Mai's"]]),
+ S("Hỏi và đáp: Của ai?","Đọc hội thoại và đóng cả hai vai.",
+  ["Đọc vai A, rồi vai B.","Đổi vai.","Thay Greg bằng tên người bạn quen và nói lại."],
+  "A: Whose T-shirt is this?\nB: It's Greg's. It's his T-shirt.\nA: And whose are those shoes?\nB: They're Kate's. They're her shoes.\nA: Are these your glasses?\nB: No, they're my father's.",
+  ["Mình nói đúng Greg's, Kate's","Mình phân biệt this và these khi nói","Mình nói his và her đúng"])
+]),
+D("Số nhiều của danh từ",30,[
+ N("Quy tắc",`<div class="tablewrap"><table>
+ <tr><th>Quy tắc</th><th>Ví dụ</th></tr>
+ <tr><td>Thêm -s</td><td>day → days, hat → hats</td></tr>
+ <tr><td>s, x, ch, sh: thêm -es</td><td>box → boxes, watch → watches, bus → buses</td></tr>
+ <tr><td>Phụ âm + y: đổi thành -ies</td><td>baby → babies, city → cities</td></tr>
+ <tr><td>Bất quy tắc</td><td>child → children, man → men, woman → women, person → people, foot → feet, tooth → teeth</td></tr>
+ </table></div>
+ <p><b>Phát âm -s:</b> /s/ sau âm vô thanh (hats), /z/ sau âm hữu thanh (jeans), /ɪz/ sau s, x, ch, sh (watches, dresses).</p>`),
+ F("Bài 1. Số nhiều","Gõ dạng số nhiều.",[
+  ["box → ___","boxes"],["watch → ___","watches"],["baby → ___","babies"],["child → ___","children"],["man → ___","men"],["woman → ___","women"],
+  ["person → ___","people"],["foot → ___","feet"],["tooth → ___","teeth"],["bus → ___","buses"],["city → ___","cities"],["day → ___","days"]]),
+ F("Bài 2. Điền câu","Điền dạng số nhiều của từ trong ngoặc.",[
+  ["There are three ___ (child) in the garden.","children"],["Two ___ (woman) are in the shop.","women"],["I have two ___ (watch).","watches"],["She has two ___ (baby).","babies"],
+  ["My ___ (foot) are cold.","feet"],["Many ___ (person) like football.","people"],["Open your ___ (box).","boxes"],["How many ___ (city) are in Vietnam?","cities"]]),
+ M("Bài 3. Âm -s","Chọn cách đọc đúng của đuôi -s.",[
+  ["socks","/s/","/z/","/ɪz/","/d/"],["jeans","/z/","/s/","/ɪz/","/t/"],["watches","/ɪz/","/s/","/z/","/t/"],["hats","/s/","/z/","/ɪz/","/d/"],["dresses","/ɪz/","/s/","/z/","/t/"],["shoes","/z/","/s/","/ɪz/","/t/"]]),
+ S("Luyện phát âm số nhiều","Đọc 12 danh từ số nhiều, chú ý ba âm cuối. Ghi âm.",
+  ["Nhóm /s/: hats, socks, boots.","Nhóm /z/: jeans, shoes, days.","Nhóm /ɪz/: watches, dresses, boxes, buses."],
+  "hats, socks, boots.\njeans, shoes, days.\nwatches, dresses, boxes, buses.",
+  ["Mình đọc nhóm /ɪz/ thành hai âm tiết","Mình không đọc thừa âm /z/ khi chỉ cần /s/","Mình nói cả 12 từ liền mạch"])
+]),
+D("Từ vựng ngôi nhà",35,[
+ V("22 từ về ngôi nhà",[
+  ["desk","bàn làm việc","There is a desk in my room."],["window","cửa sổ","Open the window, please."],["floor","sàn nhà, tầng","The floor is clean."],["door","cửa ra vào","Close the door."],
+  ["wall","tường","The wall is white."],["ceiling","trần nhà","The ceiling is high."],["stairs","cầu thang","The stairs are on the left."],["kitchen","nhà bếp","We cook in the kitchen."],
+  ["living room","phòng khách","We watch TV in the living room."],["bedroom","phòng ngủ","I sleep in my bedroom."],["bathroom","phòng tắm","Take a shower in the bathroom."],["sofa","ghế sofa","The sofa is comfortable."],
+  ["armchair","ghế bành","My father sits in the armchair."],["table","cái bàn","The table is next to the window."],["chair","cái ghế","There are four chairs."],["lamp","đèn","The lamp is on the desk."],
+  ["bed","giường","The bed is big."],["fridge","tủ lạnh","The milk is in the fridge."],["cooker","bếp nấu","The cooker is new."],["wardrobe","tủ quần áo","My clothes are in the wardrobe."],
+  ["shelf","kệ sách","The books are on the shelf."],["curtain","rèm cửa","The curtains are blue."]
+ ],"Chú ý chính tả: window, kitchen, bedroom, bathroom, wardrobe."),
+ N("There is / There are",`<p><b>There is</b> + số ít: There is a desk in my room. <b>There are</b> + số nhiều: There are two windows.</p>
+ <p>Câu hỏi: <b>Is there</b> a fridge? Yes, there is. / No, there isn't. <b>Are there</b> any chairs? Yes, there are. / No, there aren't.</p>`),
+ F("Bài 1. Chính tả ngôi nhà","Gõ từ tiếng Anh.",[
+  ["bàn làm việc → ___","desk"],["cửa sổ → ___","window"],["sàn nhà → ___","floor"],["tường → ___","wall"],["cầu thang → ___","stairs"],["nhà bếp → ___","kitchen"],
+  ["phòng khách → ___","living room"],["phòng ngủ → ___","bedroom"],["phòng tắm → ___","bathroom"],["ghế sofa → ___","sofa"],["tủ lạnh → ___","fridge"],["tủ quần áo → ___","wardrobe"]]),
+ M("Bài 2. Chọn đáp án đúng","",[
+  ["There ___ a desk in my room.","is","are","am","be"],["There ___ two windows.","are","is","am","be"],["Is there a fridge? Yes, there ___.","is","are","isn't","aren't"],["Are there any chairs? No, there ___.","aren't","isn't","are","is"],
+  ["We cook in the ___.","kitchen","bedroom","bathroom","living room"],["You sleep in the ___.","bedroom","kitchen","bathroom","stairs"],["You watch TV in the ___.","living room","kitchen","bathroom","wardrobe"],["You take a shower in the ___.","bathroom","kitchen","bedroom","living room"]]),
+ S("Mô tả phòng của bạn","Nói 6–8 câu về phòng của bạn hoặc phòng khách. Dùng There is / There are.",
+  ["Nhìn quanh phòng và chọn 6 đồ vật.","Dùng there is / there are.","Ghi âm và nghe lại."],
+  "There is a big bed in my bedroom. There is a desk next to the window. There are two chairs. There is a lamp on the desk. There are some books on the shelf. There is a wardrobe on the left. My room is small, but I like it.",
+  ["Mình dùng there is cho số ít và there are cho số nhiều","Mình nói được ít nhất 6 câu","Mình đọc rõ window và wardrobe"])
+]),
+D("Nói: Cửa hàng quần áo và nhà tôi",35,[
+ N("Hội thoại ở cửa hàng",`<p><b>Assistant:</b> Hello. Can I help you?<br>
+ <b>Customer:</b> Yes, I'm looking for a jacket.<br>
+ <b>Assistant:</b> What size are you? Medium?<br>
+ <b>Customer:</b> Yes, medium. How much is this blue jacket?<br>
+ <b>Assistant:</b> It's six hundred and fifty thousand dong.<br>
+ <b>Customer:</b> And how much are those black trousers?<br>
+ <b>Assistant:</b> They're four hundred thousand dong.<br>
+ <b>Customer:</b> Can I try the jacket on?<br>
+ <b>Assistant:</b> Of course. The changing room is over there.</p>`),
+ S("Đóng vai mua quần áo","Đọc hội thoại hai lần, mỗi lần một vai. Sau đó thay jacket bằng đồ khác và nói lại. Ghi âm lần cuối.",
+  ["Đọc vai Assistant.","Đọc vai Customer.","Thay đổi: mua shirt hoặc shoes.","Ghi âm lần cuối."],
+  "Assistant: Hello. Can I help you?\nCustomer: Yes, I'm looking for a jacket.\nAssistant: What size are you? Medium?\nCustomer: Yes, medium. How much is this blue jacket?\nAssistant: It's six hundred and fifty thousand dong.\nCustomer: And how much are those black trousers?\nAssistant: They're four hundred thousand dong.\nCustomer: Can I try the jacket on?\nAssistant: Of course. The changing room is over there.",
+  ["Mình dùng How much is… cho số ít và How much are… cho số nhiều","Mình đọc số tiền rõ ràng","Mình thay được ít nhất một từ mà không nhìn bài"]),
+ S("Nhà của tôi (1 phút)","Giới thiệu nhà hoặc phòng bạn: có mấy phòng, phòng bạn thích nhất, đồ vật trong đó.",
+  ["Ghi 5 từ khóa.","Ghi âm lần 1.","Nghe lại, kiểm tra there is và there are.","Ghi âm lần 2."],
+  "My house is small. There are three bedrooms, a kitchen and a living room. My favourite room is the living room. There is a big sofa and a TV. There are two windows, so the room is bright. I like to read there in the evening. My mother's kitchen is next to the living room.",
+  ["Mình dùng there is và there are đúng","Mình dùng 's (my mother's kitchen) đúng","Mình nói ít nhất 40 giây"]),
+ F("Ôn trộn","8 câu trước bài kiểm tra.",[
+  ["___ glasses are mine. (near me)","These"],["That's Anna's coat. It's ___ coat.","her"],["Two ___ (woman) are in the room.","women"],["This is Greg's T-shirt. It's ___.","his"],
+  ["Is ___ your phone? (far)","that"],["My jeans ___ new.","are"],["There ___ a lamp on the desk.","is"],["How much ___ these shoes?","are"]])
+]),
+D("Kiểm tra tuần 4",20,[
+ M("Bài kiểm tra tuần 4 (15 câu)","Cần 12/15 câu đúng (80%).",[
+  ["___ are my glasses. (near me)","These","This","That","Those"],["That's Kate's bag. It's ___ bag.","her","his","their","its"],["Two ___ are in the garden.","children","childs","childrens","child"],
+  ["My jeans ___ new.","are","is","am","be"],["Is ___ your coat? (far)","that","this","these","those"],["Which spelling is correct?","trousers","trowsers","trouzers","trousser"],
+  ["This is Greg's T-shirt. It's ___.","his","her","their","its"],["There ___ a sofa in the living room.","is","are","am","be"],["Kate and Giuseppe's children = ___ children","their","her","his","its"],
+  ["The plural of 'watch' is ___.","watches","watchs","watchies","watchen"],["You cook in the ___.","kitchen","bedroom","bathroom","stairs"],["Where are ___ shoes? (far)","those","these","this","that"],
+  ["Which spelling is correct?","skirt","skurt","scirt","skirrt"],["a pair of ___","jeans","jean","jeanses","jeaned"],["Whose T-shirt is it? It's ___.","Greg's","Gregs","Greg'","Greg is"]
+ ],"w4")
+])
+]});
+WEEKS.push({
+n:5, title:"Giới từ, giờ giấc, số và giá tiền",
+sub:"Ôn trộn Unit 5–7",
+why:"Các lỗi <i>on + day, in a hotel, on a bus, at home, on holiday, next door</i> xuất hiện ở Unit 8A và 10B. Progress Test còn trộn cả số, giá tiền và các điểm ngữ pháp cũ.",
+goals:["Dùng đúng at, on, in cho thời gian và nơi chốn","Đọc và nghe đúng số, giá tiền, giờ, ngày","Làm quen với bài trộn kiểu Progress Test"],
+days:[
+D("Giới từ chỉ thời gian",30,[
+ N("Ghi nhớ",`<div class="tablewrap"><table>
+ <tr><th>Giới từ</th><th>Dùng với</th><th>Ví dụ</th></tr>
+ <tr><td><b>at</b></td><td>giờ, at night, at the weekend</td><td>at 6 o'clock, at half past seven, at night</td></tr>
+ <tr><td><b>on</b></td><td>thứ, ngày tháng, buổi của một ngày cụ thể</td><td>on Monday, on 12th May, on Saturday morning</td></tr>
+ <tr><td><b>in</b></td><td>tháng, mùa, năm, buổi trong ngày</td><td>in June, in winter, in 2023, in the morning</td></tr>
+ </table></div>
+ <p><b>Lỗi hay gặp:</b> <i>at Saturday</i> sai, <i>on Saturday</i> đúng. <i>in Saturday morning</i> sai, <i>on Saturday morning</i> đúng.</p>`),
+ F("Bài 1. At, on hay in?","Điền at, on hoặc in.",[
+  ["I get up ___ 6 o'clock.","at"],["We have class ___ Monday.","on"],["My birthday is ___ June.","in"],["She works ___ night.","at"],["They go to the market ___ the morning.","in"],
+  ["We visited Hue ___ 2023.","in"],["The party is ___ Saturday evening.","on"],["I was born ___ 12th May.","on"],["He arrives ___ half past seven.","at"],["It's cold ___ winter.","in"],
+  ["We relax ___ the weekend.","at|on"],["I'll see you ___ Friday.","on"]]),
+ M("Bài 2. Chọn giới từ đúng","",[
+  ["The film starts ___ 8 pm.","at","on","in","to"],["We went to Da Nang ___ August.","in","on","at","to"],["I play football ___ Sunday.","on","in","at","to"],["She wakes up ___ the morning.","in","on","at","to"],
+  ["His birthday is ___ 5th March.","on","in","at","to"],["I was born ___ 1998.","in","on","at","to"],["The shop is closed ___ night.","at","on","in","to"],["We have a meeting ___ Tuesday afternoon.","on","in","at","to"]]),
+ S("Hỏi và đáp về thời gian","Trả lời 5 câu hỏi. Ghi âm một lần.",
+  ["What time do you get up?","What do you do on Sunday?","What do you do in the evening?","When is your birthday?","Where were you in 2020?"],
+  "I get up at six o'clock.\nOn Sunday I visit my parents.\nIn the evening I cook dinner and study English.\nMy birthday is in November.\nIn 2020 I was in Hanoi.",
+  ["Mình dùng at, on, in đúng ở cả 5 câu","Mình nói rõ âm /t/ trong at và night","Mình trả lời bằng câu đầy đủ"])
+]),
+D("Giới từ chỉ nơi chốn",35,[
+ N("Ghi nhớ",`<p><b>Nơi chốn:</b> in (bên trong), on (trên bề mặt), at (một điểm), under (dưới), next to (bên cạnh), between (ở giữa hai vật), in front of (phía trước), behind (phía sau), opposite (đối diện), near (gần).</p>
+ <div class="tablewrap"><table>
+ <tr><th>Cụm cố định</th><th>Ví dụ</th></tr>
+ <tr><td><b>on</b> a bus / train / plane / bike</td><td>I'm on the bus.</td></tr>
+ <tr><td><b>in</b> a car / taxi</td><td>He is in a taxi.</td></tr>
+ <tr><td><b>in</b> a hotel / bed</td><td>We stayed in a hotel.</td></tr>
+ <tr><td><b>at</b> home / work / school</td><td>I'm at home.</td></tr>
+ <tr><td><b>on</b> holiday</td><td>They are on holiday.</td></tr>
+ <tr><td><b>on</b> the first floor</td><td>The room is on the first floor.</td></tr>
+ <tr><td>next door</td><td>My friend lives next door.</td></tr>
+ </table></div>`),
+ F("Bài 1. Điền giới từ hoặc cụm từ","Dùng gợi ý trong ngoặc.",[
+  ["I'm ___ home.","at"],["We stayed ___ a hotel.","in"],["They are ___ holiday.","on"],["I'm ___ the bus.","on"],["He is ___ a taxi.","in"],["She's ___ work.","at"],
+  ["The cat is ___ the table. (below it)","under"],["The bank is ___ the post office and the café. (in the middle)","between"],["My friend lives in the next house. He lives ___ ___.","next door"],["The room is ___ the first floor.","on"],
+  ["Our hotel is ___ the station. (very close)","near"],["The shop is ___ the bank. (on the other side of the street)","opposite"]]),
+ N("Bài đọc: bản đồ",`<p>The hotel is in the city centre. It is opposite the museum. The bank is next to the hotel. There is a café between the bank and the post office. The station is behind the museum.</p>`),
+ M("Bài 2. Hiểu bản đồ","",[
+  ["Where is the hotel?","In the city centre","Near the station","Next to the café","Behind the museum"],["What is opposite the hotel?","The museum","The bank","The café","The station"],
+  ["What is next to the hotel?","The bank","The museum","The post office","The station"],["Where is the café?","Between the bank and the post office","Next to the station","Behind the museum","Opposite the hotel"]]),
+ S("Nói về nơi bạn sống","Mô tả đường hoặc khu phố của bạn: cái gì gần nhà, cái gì đối diện, cái gì bên cạnh.",
+  ["Nghĩ đến 4 nơi gần nhà.","Dùng near, next to, opposite, between.","Ghi âm."],
+  "My house is near the market. There is a small café next to my house. The school is opposite the café. The bank is between the school and the post office. My friend lives next door. I walk to the market in the morning.",
+  ["Mình dùng ít nhất 3 giới từ nơi chốn khác nhau","Mình dùng next door đúng","Mình đọc rõ opposite và between"])
+]),
+D("Số, giá tiền, giờ, ngày",35,[
+ N("Số, giờ, ngày",`<div class="tablewrap"><table>
+ <tr><th>Số</th><th>Cách đọc</th><th>Cái bẫy</th></tr>
+ <tr><td>13 / 30</td><td>thirTEEN / THIRty</td><td>-teen: nhấn cuối; -ty: nhấn đầu</td></tr>
+ <tr><td>14 / 40</td><td>fourTEEN / FORty</td><td>forty không có chữ u</td></tr>
+ <tr><td>15 / 50</td><td>fifTEEN / FIFty</td><td></td></tr>
+ <tr><td>£4.50</td><td>four pounds fifty</td><td></td></tr>
+ <tr><td>150,000 đồng</td><td>one hundred and fifty thousand dong</td><td></td></tr>
+ </table></div>
+ <p><b>Giờ:</b> 7:15 quarter past seven · 7:30 half past seven · 7:45 quarter to eight · 10:05 five past ten · 3:50 ten to four.</p>
+ <p><b>Số thứ tự:</b> first (1st), second (2nd), third (3rd), fourth, fifth, eighth, ninth, twelfth, twentieth, twenty-first.</p>`),
+ F("Bài 1. Số sang chữ","Gõ bằng chữ.",[
+  ["13 → ___","thirteen"],["30 → ___","thirty"],["15 → ___","fifteen"],["50 → ___","fifty"],["40 → ___","forty"],["14 → ___","fourteen"],["90 → ___","ninety"],["18 → ___","eighteen"],["12 → ___","twelve"],["100 → ___","one hundred|a hundred"]]),
+ F("Bài 2. Số thứ tự","Gõ bằng chữ.",[
+  ["5th → ___","fifth"],["9th → ___","ninth"],["12th → ___","twelfth"],["2nd → ___","second"],["3rd → ___","third"],["20th → ___","twentieth"]]),
+ F("Bài 3. Giờ và giá","Gõ cách đọc.",[
+  ["£4.50 → ___","four pounds fifty|four fifty|four pounds and fifty pence"],["7:30 → ___","half past seven"],["7:15 → ___","quarter past seven"],["7:45 → ___","quarter to eight"],["10:05 → ___","five past ten"],["3:50 → ___","ten to four"]]),
+ M("Bài 4. Nghe và chọn","Bấm Nghe, rồi chọn đáp án. Nghe được tối đa 3 lần.",[
+  ["Nghe: [[say:thirteen]]","13","30","3","16"],["Nghe: [[say:forty]]","40","14","4","44"],["Nghe: [[say:It's fourteen pounds fifty.]]","£14.50","£40.50","£4.50","£14.15"],
+  ["Nghe: [[say:The meeting is at quarter past nine.]]","9:15","9:45","9:30","9:50"],["Nghe: [[say:My birthday is on the twelfth of May.]]","12 May","2 May","20 May","15 May"],["Nghe: [[say:It's one hundred and fifty thousand dong.]]","150,000","115,000","1,500,000","50,000"]]),
+ S("Đọc số và giá","Đọc to các số, giá và giờ sau. Ghi âm.",
+  ["Đọc từng nhóm.","Chú ý 13/30, 14/40, 15/50.","Ghi âm cả đoạn."],
+  "Thirteen, thirty. Fourteen, forty. Fifteen, fifty.\nFour pounds fifty. Twelve ninety-nine. Eighty thousand dong.\nQuarter past seven. Half past seven. Quarter to eight.\nThe third of March. The twelfth of May.",
+  ["Mình nhấn đúng -teen và -ty","Mình đọc đúng giờ: quarter past, half past, quarter to","Mình đọc số thứ tự third, twelfth, twentieth đúng"])
+]),
+D("Ôn trộn kiểu Unit 7 Review",35,[
+ M("Bài 1. Trộn ngữ pháp (12 câu)","Mỗi câu thuộc một chủ đề cũ.",[
+  ["Yesterday I ___ at home.","was","were","did","am"],["We ___ to Hue last year.","went","go","goed","did go"],["He ___ in a bank.","works","work","working","worked"],["___ is my bag. (near me)","This","That","These","Those"],
+  ["That is Anna's bag. It's ___ bag.","her","his","their","its"],["We are ___ holiday.","on","in","at","to"],["There ___ two chairs.","are","is","am","be"],["The meeting is ___ Monday.","on","in","at","to"],
+  ["Where ___ you go last year?","did","was","were","do"],["My jeans ___ new.","are","is","am","be"],["The bank is ___ the hotel. (on the other side of the road)","opposite","between","under","in"],["Two ___ are in the garden.","children","childs","childrens","child"]]),
+ M("Bài 2. Tìm câu đúng","Chọn câu không có lỗi.",[
+  ["Which is correct?","I didn't go to school yesterday.","I didn't went to school yesterday.","I wasn't went to school yesterday.","I not go to school yesterday."],
+  ["Which is correct?","She works in a bank.","She work in a bank.","She works in a bank on Saturday at.","She working in a bank."],
+  ["Which is correct?","What was the weather like?","What did the weather like?","What were the weather like?","What do the weather like?"],
+  ["Which is correct?","These glasses are mine.","These glasses is mine.","This glasses are mine.","These glass are mine."],
+  ["Which is correct?","We stayed in a hotel.","We stayed on a hotel.","We stayed at hotel.","We stay in hotel."],
+  ["Which is correct?","I play football on Saturday.","I play football at Saturday.","I play football in Saturday.","I play football Saturday on."],
+  ["Which is correct?","Kate and Giuseppe's children are tall.","Kate and Giuseppe's children is tall.","Kate and Giuseppe children are tall.","Kate's and Giuseppe children are tall."],
+  ["Which is correct?","Was it cold? No, it wasn't.","Was it cold? No, it didn't.","Did it cold? No, it didn't.","Were it cold? No, it weren't."]]),
+ S("Đọc theo: ở chợ","Đóng vai người mua và người bán. Ghi âm.",
+  ["Đọc cả hai vai.","Chú ý số tiền.","Ghi âm lần cuối."],
+  "A: How much are the oranges?\nB: Thirty thousand dong a kilo.\nA: And the apples?\nB: They're forty thousand dong a kilo.\nA: I'll take two kilos of oranges, please.\nB: That's sixty thousand dong.",
+  ["Mình đọc đúng thirty và forty","Mình nói How much are… đúng","Mình tính đúng sáu mươi nghìn đồng"])
+]),
+D("Nói: Một ngày của tôi",35,[
+ S("Ngày của tôi (1 phút)","Dùng giờ giấc và giới từ at/on/in. Gợi ý: What time do you get up? Where do you work? What do you do in the evening? What do you do on Sunday?",
+  ["Ghi 5 từ khóa.","Ghi âm lần 1.","Nghe lại, kiểm tra at, on, in.","Ghi âm lần 2."],
+  "I get up at six o'clock. I have breakfast at half past six. I go to work by bus and I'm at work at eight. I have lunch at twelve. In the evening I study English. On Sunday I visit my parents. I go to bed at eleven.",
+  ["Mình dùng at cho giờ, on cho Sunday, in cho the evening","Mình nói giờ đúng (half past six)","Mình nói ít nhất 40 giây"]),
+ S("Nơi tôi sống và đi làm (1 phút)","Dùng near, next to, opposite, between và in/on/at.",
+  ["Ghi từ khóa.","Ghi âm.","Nghe lại, đánh dấu giới từ dùng sai."],
+  "I live in a flat on the second floor. My friend lives next door. There is a market near the flat. The bank is opposite the market. I go to work on the bus. I am at home on Sunday.",
+  ["Mình dùng on the second floor và next door đúng","Mình dùng on the bus, at home đúng","Mình không ngập ngừng quá 3 lần"]),
+ F("Ôn nhanh: giới từ","8 câu cuối trước bài kiểm tra.",[
+  ["I get up ___ 7 o'clock.","at"],["We have class ___ Friday.","on"],["She was born ___ 2001.","in"],["We stayed ___ a hostel.","in"],
+  ["They are ___ holiday.","on"],["I live ___ the third floor.","on"],["The shop is ___ the bank. (right beside it)","next to"],["I'm ___ work now.","at"]])
+]),
+D("Kiểm tra tuần 5",20,[
+ M("Bài kiểm tra tuần 5 (15 câu)","Cần 12/15 câu đúng (80%).",[
+  ["I'm ___ home.","at","on","in","to"],["The meeting is ___ Monday.","on","in","at","to"],["We're ___ holiday.","on","in","at","to"],["My birthday is ___ August.","in","on","at","to"],
+  ["The café is ___ the bank and the hotel. (in the middle)","between","opposite","under","near"],["12th = ___","twelfth","twelveth","twelfeth","twelth"],["Which number is 30?","thirty","thirteen","thirdy","three"],
+  ["£4.50 is ___.","four pounds fifty","forty pounds five","fourteen fifty","four hundred fifty"],["7:45 is ___.","quarter to eight","quarter past seven","half past seven","quarter to seven"],["I live on the second ___.","floor","ground","stairs","lift"],
+  ["He is ___ a taxi.","in","on","at","to"],["The hotel is ___ the museum, on the other side of the road.","opposite","between","behind","under"],["She starts work ___ 8 o'clock.","at","on","in","to"],
+  ["We stayed ___ a small hotel.","in","on","at","to"],["My friend lives in the next house. He lives ___.","next door","next to door","near door","door next"]
+ ],"w5")
+])
+]});
+WEEKS.push({
+n:6, title:"Thi thử, sổ lỗi và chốt mức 80%",
+sub:"Hai đề 30 câu và bài nói tổng kết",
+why:"Tuần cuối kiểm tra xem 5 tuần vừa rồi đã đủ chưa. Mỗi đề thi thử có 30 câu như Progress Test thật.",
+goals:["Đạt từ 24/30 (80%) ở cả hai đề thi thử","Lập sổ lỗi cá nhân từ các câu làm sai","Ghi âm bài nói 2 phút và so sánh với tuần 1"],
+days:[
+D("10 lỗi hay sai nhất",30,[
+ N("Sổ lỗi cá nhân",`<p>Hãy lấy một cuốn vở và chia thành 3 cột: <b>Câu sai</b>, <b>Câu đúng</b>, <b>Vì sao</b>. Ghi lại mọi câu sai từ tuần 1 đến tuần 5, rồi đọc lại sổ này trước mỗi bài thi thử.</p>
+ <div class="tablewrap"><table>
+ <tr><th>Sai</th><th>Đúng</th></tr>
+ <tr><td>Where did you went?</td><td>Where did you <b>go</b>?</td></tr>
+ <tr><td>I didn't went to school.</td><td>I didn't <b>go</b> to school.</td></tr>
+ <tr><td>What did the weather like?</td><td>What <b>was</b> the weather like?</td></tr>
+ <tr><td>He work in a bank.</td><td>He <b>works</b> in a bank.</td></tr>
+ <tr><td>Does she works here?</td><td>Does she <b>work</b> here?</td></tr>
+ <tr><td>Yesterday I am tired.</td><td>Yesterday I <b>was</b> tired.</td></tr>
+ <tr><td>These glasses is new.</td><td>These glasses <b>are</b> new.</td></tr>
+ <tr><td>at Saturday</td><td><b>on</b> Saturday</td></tr>
+ <tr><td>We stayed on a hotel.</td><td>We stayed <b>in</b> a hotel.</td></tr>
+ <tr><td>Kate and Giuseppe's children... Kate and Giuseppe's → ?</td><td><b>their</b> children</td></tr>
+ </table></div>`),
+ M("Bài 1. Chọn câu đúng","10 lỗi trên, giờ ở dạng câu hỏi.",[
+  ["Which is correct?","Where did you go?","Where did you went?","Where you did go?","Where did you gone?"],["Which is correct?","I didn't go to school.","I didn't went to school.","I not went to school.","I wasn't go to school."],
+  ["Which is correct?","What was the weather like?","What did the weather like?","What were the weather like?","What does the weather like?"],["Which is correct?","He works in a bank.","He work in a bank.","He working in a bank.","He works in a bank at."],
+  ["Which is correct?","Does she work here?","Does she works here?","Do she work here?","Is she work here?"],["Which is correct?","Yesterday I was tired.","Yesterday I am tired.","Yesterday I did tired.","Yesterday I be tired."],
+  ["Which is correct?","These glasses are new.","These glasses is new.","This glasses are new.","These glasses was new."],["Which is correct?","on Saturday","at Saturday","in Saturday","to Saturday"],
+  ["Which is correct?","We stayed in a hotel.","We stayed on a hotel.","We stayed to a hotel.","We stayed at the hotel on."],["Kate and Giuseppe's children → ___ children","their","her","his","its"]]),
+ S("Đọc theo: câu đúng","Đọc to 10 câu đúng ở bảng, mỗi câu 2 lần. Ghi âm lần thứ hai.",
+  ["Đọc chậm lần 1.","Đọc tự nhiên lần 2 và ghi âm.","Nghe lại, kiểm tra mình không dừng ở động từ."],
+  "Where did you go?\nI didn't go to school.\nWhat was the weather like?\nHe works in a bank.\nDoes she work here?\nYesterday I was tired.\nThese glasses are new.\nI'll see you on Saturday.\nWe stayed in a hotel.\nTheir children are tall.",
+  ["Mình đọc đúng 10 câu không vấp","Mình đọc nhẹ was/were, did, does trong câu","Mình thấy câu nào còn khó để thêm vào sổ lỗi"])
+]),
+D("Thi thử A (30 câu)",35,[
+ M("Đề thi thử A","Làm đủ 30 câu, tối thiểu 20 phút. Cần 24/30 (80%). Không xem sổ tay.",[
+  ["We ___ at a wedding last Saturday.","were","was","are","did"],["___ the film good?","Was","Were","Did","Do"],["My brother ___ at home yesterday.","wasn't","weren't","didn't","isn't"],
+  ["The past of 'write' is ___.","wrote","writed","written","writes"],["I ___ breakfast this morning.","didn't have","didn't had","hadn't","don't had"],["Where ___ you go last year?","did","was","were","do"],
+  ["What ___ the weather like in Da Lat?","was","did","were","do"],["Did he ___ you?","call","called","calls","calling"],["She ___ in a hospital. She's a nurse.","works","work","working","worked"],
+  ["Does your father ___ a car?","drive","drives","driving","drove"],["A ___ makes food in a restaurant.","chef","pilot","farmer","nurse"],["Which spelling is correct?","receptionist","recepsionist","receptionnist","receptonist"],
+  ["You sleep under a ___.","blanket","towel","key","shower"],["These jeans ___ expensive.","are","is","am","be"],["Is ___ your phone? (on the table over there)","that","this","these","those"],
+  ["That is Linh's bag. It is ___ bag.","her","his","their","its"],["The plural of 'baby' is ___.","babies","babys","babyes","babies's"],["There ___ three chairs in the room.","are","is","am","be"],
+  ["I get up ___ 6 a.m.","at","on","in","to"],["We have class ___ Tuesday.","on","at","in","to"],["The cat is ___ the sofa. (below it)","under","in","at","opposite"],
+  ["They stayed ___ a hostel.","in","on","at","to"],["40 = ___","forty","fourty","fourteen","fortie"],["3rd = ___","third","thrid","threed","thirth"],
+  ["£6.50 = six pounds ___.","fifty","fifteen","five","fiftie"],["Yesterday I ___ the underground to the airport.","took","taked","take","takes"],["We ___ not see the pagoda.","did","was","were","do"],
+  ["Whose T-shirt is it? It's ___.","Greg's","Gregs","Greg","Greg is"],["A building where tourists sleep and that has a reception is a ___.","hotel","museum","airport","bridge"],["How ___ your holiday?","was","did","were","do"]
+ ],"mockA")
+]),
+D("Chữa đề và ôn chính tả",35,[
+ N("Cách chữa đề",`<ol><li>Lên trang <b>Sổ điểm</b> hoặc cuộn lại đề A, bấm "Chấm điểm" để thấy câu sai.</li><li>Chép mỗi câu sai vào sổ lỗi: câu sai, câu đúng, vì sao.</li><li>Làm lại những câu đó sau 10 phút mà không nhìn đáp án.</li></ol>`),
+ F("Ôn chính tả: 20 từ từ cả 5 tuần","Đây là những từ Hưng sai nhiều nhất. Gõ từ tiếng Anh.",[
+  ["chùa → ___","pagoda"],["kỳ nghỉ → ___","holiday"],["tàu điện ngầm → ___","underground"],["chăn → ___","blanket"],["gối → ___","pillow"],["lễ tân → ___","receptionist"],["đầu bếp → ___","chef"],
+  ["quản lý → ___","manager"],["kính → ___","glasses"],["chân váy → ___","skirt"],["quần dài → ___","trousers"],["cầu thang → ___","stairs"],["phòng khách → ___","living room"],["tủ lạnh → ___","fridge"],
+  ["bài đánh giá → ___","review"],["yêu thích → ___","favourite|favorite"],["hồ bơi → ___","swimming pool"],["tầng trệt → ___","ground floor"],["đối diện → ___","opposite"],["nhà bên cạnh → ___","next door"]]),
+ S("Đọc lại sổ lỗi","Đọc to 10 câu đúng quan trọng nhất trong sổ lỗi của bạn. Ghi âm.",
+  ["Chọn 10 câu bạn hay sai nhất.","Đọc mỗi câu 2 lần.","Ghi âm lần thứ hai."],
+  "Ví dụ: Where did you go last year? I didn't go to work yesterday. What was the weather like? These shoes are new. We stayed in a hotel.",
+  ["Mình đọc đúng ít nhất 8 trong 10 câu mà không vấp","Mình đọc câu đúng nhiều hơn một lần","Mình ghi thêm 2 câu mới vào sổ"])
+]),
+D("Thi thử B (30 câu)",35,[
+ M("Đề thi thử B","Làm đủ 30 câu, tối thiểu 20 phút. Cần 24/30 (80%). Không xem sổ tay.",[
+  ["Last night I ___ very tired.","was","were","did","am"],["They ___ at the gym yesterday.","were","was","did","are"],["___ your parents at home last night?","Were","Was","Did","Do"],
+  ["The past of 'see' is ___.","saw","seed","seen","sees"],["She ___ me an email yesterday.","sent","sended","send","sends"],["I ___ go to school on Sunday.","didn't","wasn't","don't","not"],
+  ["___ you eat out last night?","Did","Was","Were","Do"],["What ___ you do last weekend?","did","was","were","do"],["My mum ___ English in a school.","teaches","teach","teachs","teaching"],
+  ["He ___ not like coffee.","does","do","is","did"],["A person who drives a bus is a bus ___.","driver","worker","manager","chef"],["Which spelling is correct?","engineer","enginer","engeneer","engineeer"],
+  ["Which spelling is correct?","swimming pool","swiming pool","swimming poll","swimmin pool"],["The room ___ simple but clean.","was","were","did","are"],["Those shoes ___ my sister's.","are","is","am","be"],
+  ["How much ___ this skirt?","is","are","am","be"],["The plural of 'woman' is ___.","women","womans","womens","woman"],["Kate and Tom's house = ___ house","their","her","his","its"],
+  ["___ is a nice day, isn't it?","This","These","Those","They"],["My birthday is ___ 5th March.","on","in","at","to"],["We go swimming ___ summer.","in","on","at","to"],
+  ["We were ___ holiday in Phu Quoc.","on","in","at","to"],["The bank is ___ the hotel. (on the other side of the road)","opposite","between","under","in"],["Which is 13?","thirteen","thirty","three","thirteenty"],
+  ["7:30 = ___","half past seven","quarter to seven","quarter past seven","seven and half to"],["12th = ___","twelfth","twelveth","twelfeth","twelth"],["Yesterday we ___ pizza for dinner.","ate","eat","eaten","eated"],
+  ["Did you ___ him at the station?","meet","met","meets","meeting"],["It was ___ so I wore a coat.","cold","hot","sunny","dry"],["There ___ a lamp on the desk.","is","are","am","be"]
+ ],"mockB")
+]),
+D("Nói: Bài tổng kết 2 phút",40,[
+ S("Hỏi và đáp tổng hợp","Trả lời 6 câu, mỗi câu 2–3 câu. Ghi âm một lần.",
+  ["Where were you last weekend, and who was with you?","What did you do on Saturday? Use at least three past verbs.","What was the weather like?","What do you do? Where do you work?","What is in your room? Use there is and there are.","What time do you get up, and what do you do on Sunday?"],
+  "Last weekend I was at my parents' house. My brother was with me.\nOn Saturday I went to the market, I bought some fruit and I cooked lunch.\nIt was hot and sunny.\nI'm an engineer. I work in an office in Hanoi.\nThere is a bed and a desk in my room. There are two windows.\nI get up at six o'clock. On Sunday I visit my parents.",
+  ["Mình dùng was/were, did và went/bought đúng","Mình dùng there is/are và present simple đúng","Mình dùng at, on, in đúng"]),
+ S("Kể một chuyến đi (2 phút)","Kể về một chuyến đi trong quá khứ: đi đâu, với ai, thời tiết, khách sạn, ăn gì, làm gì. Nói liên tục khoảng 2 phút.",
+  ["Dùng khung 6 ý: Where? Who? Weather? Hotel? Food? What did you do?","Ghi âm lần 1.","Nghe lại và so sánh với bản ghi tuần 1.","Ghi âm lần 2 để chốt."],
+  "Last summer I went to Da Nang with my family. We took a plane and stayed in a small hotel near the beach. The hotel was simple but clean. The manager was very friendly. The weather was hot and sunny. In the morning we swam in the sea. For lunch we ate fresh fish at a restaurant on the beach. In the afternoon we visited a pagoda and the museum. We didn't go to the mountain because it was windy. In the evening we walked along the road next to the river. It was a great holiday and I want to go again next year.",
+  ["Mình nói liên tục khoảng 2 phút, không dừng lâu","Mình dùng ít nhất 8 động từ quá khứ đúng","Mình dùng ít nhất 5 từ vựng mới từ tuần 1–5"])
+]),
+D("Tổng kết và bước tiếp theo",25,[
+ N("Đã đạt chưa?",`<p>Vào trang <b>Sổ điểm</b> để xem điểm cao nhất của từng bài kiểm tra.</p>
+ <ul>
+  <li><b>Đạt:</b> đề thi thử A và B đều từ 24/30 trở lên. Hãy xin làm lại một Progress Test thật. Mục tiêu là 80% hai lần liên tiếp.</li>
+  <li><b>Gần đạt:</b> một đề từ 21–23 câu. Ôn thêm 1 tuần các chủ đề sai nhiều nhất rồi làm lại đề đó.</li>
+  <li><b>Chưa đạt:</b> dưới 21 câu. Quay lại tuần có điểm kiểm tra thấp nhất, học lại ngày 1–3 của tuần đó rồi làm lại bài kiểm tra.</li>
+ </ul>
+ <p><b>Sau khi đạt:</b> mỗi tuần làm 1 quiz mới, ghi âm 1 bài nói ngắn và đọc lại sổ lỗi để giữ kết quả.</p>`)
+])
+]});
+
+/* ---------- helpers ---------- */
+const $=(s,r)=>(r||document).querySelector(s);
+const $$=(s,r)=>Array.from((r||document).querySelectorAll(s));
+const LS={
+  get(k){try{return localStorage.getItem(k)}catch(e){return null}},
+  set(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const norm=s=>String(s).toLowerCase().replace(/[’‘]/g,"'").replace(/[.!?]+$/,"").replace(/\s+/g," ").trim();
+function shuffle(a){const b=a.slice();for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
+function say(text){
+  try{
+    if(!("speechSynthesis" in window))return;
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);u.lang="en-US";u.rate=0.85;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+const fmtDate=iso=>{try{const d=new Date(iso);return d.toLocaleDateString("vi-VN")+" "+d.toLocaleTimeString("vi-VN",{hour:"2-digit",minute:"2-digit"})}catch(e){return ""}};
+const fmtSec=s=>Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
+
+/* ---------- state: local (localStorage) or shared (db) ---------- */
+const PASS=0.8;
+const CTX={inClaude:!!(window.claude&&window.claude.use),online:false,db:null,canWrite:true,canEdit:false,status:"local"};
+const STATE={days:{},attempts:[],speaking:{},notes:{},config:{}};
+const dayId=(n,i)=>`w${n}d${i}`;
+function loadLocal(){
+  WEEKS.forEach(w=>w.days.forEach((d,i)=>{if(LS.get("th:d:"+dayId(w.n,i+1))==="1")STATE.days[dayId(w.n,i+1)]={w:w.n,d:i+1,done:true}}));
+  try{STATE.attempts=JSON.parse(LS.get("th:attempts")||"[]")}catch(e){STATE.attempts=[]}
+  try{STATE.speaking=JSON.parse(LS.get("th:speak")||"{}")}catch(e){STATE.speaking={}}
+}
+async function dbSet(path,data){
+  if(!CTX.online)return false;
+  try{await CTX.db.doc(path).set(data);return true}
+  catch(e){if(e&&e.code==="invalid_argument"){CTX.canWrite=false;applyRole()}return false}
+}
+const isDone=(n,i)=>!!(STATE.days[dayId(n,i)]&&STATE.days[dayId(n,i)].done);
+function setDone(n,i,v){
+  const rec={w:n,d:i,done:v,at:new Date().toISOString()};
+  STATE.days[dayId(n,i)]=rec;
+  if(CTX.online)dbSet("days/"+dayId(n,i),rec);else LS.set("th:d:"+dayId(n,i),v?"1":"0");
+}
+function addAttempt(a){
+  STATE.attempts.push(a);
+  if(CTX.online)dbSet("attempts/"+a.id,a);else LS.set("th:attempts",JSON.stringify(STATE.attempts));
+}
+function setSpeak(id,rec){
+  STATE.speaking[id]=rec;
+  if(CTX.online)dbSet("speaking/"+id,rec);else LS.set("th:speak",JSON.stringify(STATE.speaking));
+}
+function scoreOf(t){
+  const a=STATE.attempts.filter(x=>x.test===t).sort((p,q)=>p.at<q.at?-1:1);
+  if(!a.length)return null;
+  const best=Math.max(...a.map(x=>x.correct));
+  return {best,last:a[a.length-1].correct,total:a[a.length-1].total,n:a.length};
+}
+
+/* ---------- block renderers ---------- */
+function rNote(b){return `<section class="block note"><h3>${b.h}</h3>${b.html}</section>`}
+
+function rVocab(b,id){
+  const rows=b.rows.map(r=>`<tr><td class="en">${esc(r[0])}</td><td class="vi">${esc(r[1])}</td><td class="eg">${esc(r[2])}</td><td><button class="btn ghost sm" data-act="say" data-say="${esc(r[0].replace(/\s*[\/→].*$/,"").trim()+(r[2]?". "+r[2]:""))}" aria-label="Nghe ${esc(r[0])}">Nghe</button></td></tr>`).join("");
+  return `<section class="block vocab" id="${id}"><h3>${b.h}</h3>${b.intro?`<p class="intro">${b.intro}</p>`:""}
+  <label class="toggle"><input type="checkbox" data-act="hide-vi"> Che nghĩa tiếng Việt để tự kiểm tra</label>
+  <div class="tablewrap"><table><tr><th>Từ</th><th>Nghĩa</th><th>Ví dụ</th><th></th></tr>${rows}</table></div></section>`;
+}
+
+function rFill(b,id){
+  const items=b.items.map((it,i)=>{
+    const inp=`<input class="gap" type="text" id="${id}-${i}" data-a="${esc(it[1])}" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Đáp án câu ${i+1}">`;
+    const q=esc(it[0]);
+    return `<li>${q.includes("___")?q.replace("___",inp):q+" "+inp}<span class="fb"></span></li>`;
+  }).join("");
+  return `<section class="block ex" data-kind="fill" id="${id}"><h3>${b.h}</h3>${b.intro?`<p class="intro">${b.intro}</p>`:""}<ol>${items}</ol>
+  <div class="actions"><button class="btn" data-act="check-fill">Kiểm tra</button><button class="btn ghost" data-act="show-fill">Xem đáp án</button><button class="btn ghost" data-act="reset-fill">Làm lại</button><span class="score" aria-live="polite"></span></div></section>`;
+}
+
+function rMcq(b,id){
+  const items=b.items.map((it,i)=>{
+    const correct=it[1];
+    const opts=shuffle(it.slice(1));
+    const qtxt=esc(it[0]).replace(/\[\[say:(.+?)\]\]/g,(m,t)=>`<button class="btn ghost sm" type="button" data-act="say" data-say="${t}">Nghe</button>`);
+    return `<div class="q" data-correct="${esc(correct)}"><p>${i+1}. ${qtxt}</p>${opts.map(o=>`<label class="opt"><input type="radio" name="${id}-${i}" value="${esc(o)}"><span>${esc(o)}</span></label>`).join("")}<span class="fb"></span></div>`;
+  }).join("");
+  const best=b.test?scoreOf(b.test):null;
+  return `<section class="block ex" data-kind="mcq" data-test="${b.test||""}" id="${id}"><h3>${b.h}</h3>${b.intro?`<p class="intro">${b.intro}</p>`:""}${items}
+  <div class="actions"><button class="btn" data-act="check-mcq">Chấm điểm</button><button class="btn ghost" data-act="reset-mcq">Làm lại</button><span class="score" aria-live="polite">${best?`Điểm cao nhất trước đây: ${best.best}/${best.total}`:""}</span></div></section>`;
+}
+
+function rSpeak(b,id){
+  const steps=(b.steps||[]).map(s=>`<li>${esc(s)}</li>`).join("");
+  const checks=(b.checks||[]).map((c,i)=>`<label><input type="checkbox" id="${id}-c${i}"> ${esc(c)}</label>`).join("");
+  const rec=CTX.inClaude
+    ?`<div class="rec-wrap"><p class="rec-note" style="margin:0">Trang online không ghi âm trực tiếp. Hãy ghi bằng điện thoại (ứng dụng ghi âm hoặc voice note Zalo), gửi cho giáo viên, rồi bấm nút bên dưới. Muốn ghi âm ngay trong trang, dùng file ebook mở trên máy.</p></div>`
+    :`<div class="rec-wrap" data-rec="${id}"><div class="actions"><button class="btn rec" data-act="rec">Bắt đầu ghi âm</button><span class="timer">0:00</span></div>
+  <div class="takes"></div><p class="rec-note">Ghi âm xong, nghe lại rồi bấm Tải về để lưu và gửi cho thầy/cô. Nếu trình duyệt không cho ghi âm, hãy ghi bằng điện thoại.</p></div>`;
+  return `<section class="block speak" id="${id}"><h3>Nói và ghi âm: ${b.h}</h3><p>${esc(b.prompt)}</p>
+  <ol>${steps}</ol>
+  <details class="model"><summary>Bài mẫu để đọc theo hoặc tham khảo</summary><div>${esc(b.model)}</div>
+  <p><button class="btn ghost sm" data-act="say" data-say="${esc(b.model.replace(/\n+/g," "))}">Nghe mẫu</button></p></details>
+  ${rec}
+  <div class="checks"><b>Tự chấm sau khi nghe lại:</b>${checks}</div>
+  <div class="actions"><button class="btn ghost sent" data-act="sent" data-title="${esc(b.h)}">Đánh dấu: đã ghi âm và gửi cho giáo viên</button><span class="sentinfo"></span></div></section>`;
+}
+
+function rBlock(b,id){
+  return b.t==="note"?rNote(b):b.t==="vocab"?rVocab(b,id):b.t==="fill"?rFill(b,id):b.t==="mcq"?rMcq(b,id):rSpeak(b,id);
+}
+
+/* ---------- pages ---------- */
+function weekTests(w){return w.n===6?["mockA","mockB"]:["w"+w.n]}
+function speakIds(w){
+  const ids=[];
+  w.days.forEach((d,di)=>d.blocks.forEach((b,bi)=>{if(b.t==="speak")ids.push(`w${w.n}d${di+1}b${bi+1}`)}));
+  return ids;
+}
+function weekProgress(w){
+  let done=0;w.days.forEach((d,i)=>{if(isDone(w.n,i+1))done++});
+  return Math.round(done/w.days.length*100);
+}
+
+function renderWeek(w){
+  let opened=false;
+  const days=w.days.map((d,di)=>{
+    const blocks=d.blocks.map((b,bi)=>rBlock(b,`w${w.n}d${di+1}b${bi+1}`)).join("");
+    const done=isDone(w.n,di+1);
+    const isTest=d.blocks.some(b=>b.t==="mcq"&&b.test);
+    const open=(!done&&!opened)?(opened=true," open"):"";
+    return `<details class="day${done?" done":""}" data-wd="${w.n}-${di+1}"${open}>
+    <summary><span class="dn">Ngày ${di+1}</span><span class="dt">${esc(d.title)}</span><span class="dm">${d.min} phút</span><span class="ok">Đã xong</span></summary>
+    <div class="daybody">${blocks}<label class="donebar"><input type="checkbox" data-act="day-done" data-w="${w.n}" data-d="${di+1}"${done?" checked":""}> ${isTest?"Đã làm xong bài kiểm tra":"Đã học xong ngày này"}</label></div></details>`;
+  }).join("");
+  const goals=w.goals.map(g=>`<li>${esc(g)}</li>`).join("");
+  return `<div class="hero"><div class="eyebrow">Tuần ${w.n} · ${esc(w.sub)}</div><h1>${esc(w.title)}</h1>
+  <p class="lede">${w.why}</p><ul class="goals">${goals}</ul>
+  <div class="chips"><span class="chip">${w.days.length} ngày</span><span class="chip s">${speakIds(w).length} bài nói</span><span class="chip w">Kiểm tra cuối tuần: cần 80%</span></div></div>${days}`;
+}
+
+/* ----- observer dashboard ----- */
+function weekSummary(w){
+  const total=w.days.length;
+  let done=0;w.days.forEach((d,i)=>{if(isDone(w.n,i+1))done++});
+  const tests=weekTests(w).map(t=>({id:t,s:scoreOf(t)}));
+  const sids=speakIds(w);
+  const sent=sids.filter(id=>STATE.speaking[id]&&STATE.speaking[id].sent).length;
+  const needSent=Math.ceil(sids.length*0.6);
+  const attempts=STATE.attempts.filter(a=>weekTests(w).includes(a.test));
+  const fast=attempts.some(a=>a.seconds>0&&a.seconds<a.total*12);
+  const touched=[];
+  w.days.forEach((d,i)=>{const r=STATE.days[dayId(w.n,i+1)];if(r&&r.at)touched.push(r.at)});
+  attempts.forEach(a=>touched.push(a.at));
+  sids.forEach(id=>{const r=STATE.speaking[id];if(r&&r.at)touched.push(r.at)});
+  touched.sort();
+  const started=done>0||attempts.length>0||sent>0;
+  const reasons=[];
+  if(done<total-1)reasons.push(`Mới học ${done}/${total} ngày, cần ít nhất ${total-1}`);
+  tests.forEach(t=>{
+    if(!t.s)reasons.push(`Chưa làm ${t.id==="mockA"?"đề thi thử A":t.id==="mockB"?"đề thi thử B":"bài kiểm tra tuần"}`);
+    else if(t.s.best/t.s.total<PASS)reasons.push(`${t.id==="mockA"?"Đề A":t.id==="mockB"?"Đề B":"Bài kiểm tra"}: cao nhất ${Math.round(t.s.best/t.s.total*100)}%, chưa đạt 80%`);
+  });
+  if(sent<needSent)reasons.push(`Bài nói đã gửi ${sent}/${sids.length}, cần ít nhất ${needSent}`);
+  const testTaken=tests.some(t=>t.s);
+  let status;
+  if(!started)status="none";
+  else if(!reasons.length)status="pass";
+  else if(testTaken||done===total)status="fail";
+  else status="going";
+  // schedule
+  let late=false,future=false;
+  const cw=currentWeek();
+  if(cw!=null){
+    if(w.n>cw&&!started)future=true;
+    if(w.n<cw&&status!=="pass")late=true;
+  }
+  return {total,done,tests,sids,sent,needSent,attempts,fast,last:touched.length?touched[touched.length-1]:null,started,reasons,status,late,future};
+}
+function currentWeek(){
+  const s=STATE.config&&STATE.config.start;
+  if(!s)return null;
+  const t=new Date(s+"T00:00:00");
+  if(isNaN(t))return null;
+  const days=Math.floor((Date.now()-t.getTime())/86400000);
+  return days<0?0:Math.min(7,Math.floor(days/7)+1);
+}
+function roleLabel(){
+  if(!CTX.online)return "Bản chạy trên máy";
+  if(CTX.canEdit)return "Giáo viên";
+  if(CTX.canWrite)return "Học viên";
+  return "Quan sát viên (phụ huynh)";
+}
+function bannerHTML(){
+  if(!CTX.inClaude)return "";
+  if(CTX.status==="nodb")return `<div class="callout">Bạn chưa đăng nhập claude.ai nên tiến độ chỉ lưu trên máy này và không hiện cho phụ huynh, giáo viên.</div>`;
+  if(CTX.status==="loading")return `<div class="callout">Đang tải dữ liệu theo dõi…</div>`;
+  if(CTX.status==="slow")return `<div class="callout">Chưa kết nối được dữ liệu theo dõi. Dữ liệu đang hiển thị có thể chưa mới nhất.</div>`;
+  if(CTX.status==="error")return `<div class="callout">Không đọc được dữ liệu theo dõi. Hãy tải lại trang hoặc nhờ giáo viên kiểm tra quyền truy cập.</div>`;
+  if(CTX.online&&!CTX.canWrite)return `<div class="callout"><b>Chế độ quan sát.</b> Bạn xem được tiến độ và kết quả của Hưng. Bài tập trong trang chạy thử được nhưng không được lưu.</div>`;
+  return "";
+}
+const STATUS_UI={
+  pass:["Đạt tuần","tag-pass"],fail:["Chưa đạt","tag-fail"],going:["Đang học","tag-mid"],none:["Chưa bắt đầu","tag-mute"]
+};
+function renderTracker(){
+  const sums=WEEKS.map(w=>({w,s:weekSummary(w)}));
+  const passed=sums.filter(x=>x.s.status==="pass").length;
+  const cw=currentWeek();
+  const late=sums.some(x=>x.s.late);
+  const a=scoreOf("mockA"),b=scoreOf("mockB");
+  const mockOk=a&&b&&a.best/a.total>=PASS&&b.best/b.total>=PASS;
+  const sched=cw==null?"Giáo viên chưa đặt ngày bắt đầu, nên chưa so sánh được với lịch.":cw===0?"Chưa tới ngày bắt đầu.":cw>6?"Đã qua thời gian 6 tuần theo lịch.":`Theo lịch, hôm nay thuộc tuần ${cw}. ${late?"Có tuần đang chậm so với lịch.":"Chưa thấy tuần nào chậm."}`;
+  const cards=sums.map(({w,s})=>{
+    const ui=s.future?["Chưa tới lịch","tag-mute"]:(s.status==="going"&&s.late?["Chậm lịch","tag-fail"]:STATUS_UI[s.status]);
+    const dots=w.days.map((d,i)=>`<i class="dot${isDone(w.n,i+1)?" on":""}" title="Ngày ${i+1}"></i>`).join("");
+    const tl=s.tests.map(t=>t.s?`${t.id==="mockA"?"Đề A":t.id==="mockB"?"Đề B":"Kiểm tra"}: <b>${t.s.best}/${t.s.total}</b> (${Math.round(t.s.best/t.s.total*100)}%), ${t.s.n} lần làm`:`${t.id==="mockA"?"Đề A":t.id==="mockB"?"Đề B":"Kiểm tra"}: chưa làm`).join("<br>");
+    const reasons=(s.status==="fail"||s.status==="going"||s.late)&&s.reasons.length?`<ul class="why">${s.reasons.map(r=>`<li>${esc(r)}</li>`).join("")}</ul>`:"";
+    const fast=s.fast?`<p class="warnline">Có lần làm bài kiểm tra quá nhanh (dưới 12 giây mỗi câu).</p>`:"";
+    const note=STATE.notes["w"+w.n];
+    let noteHTML="";
+    if(CTX.online){
+      if(CTX.canEdit)noteHTML=`<label class="notel" for="note-${w.n}">Nhận xét của giáo viên</label><textarea id="note-${w.n}" rows="2" placeholder="Viết nhận xét ngắn cho tuần này">${esc(note?note.text:"")}</textarea><div class="actions"><button class="btn sm" data-act="save-note" data-w="${w.n}">Lưu nhận xét</button><span class="saved" id="saved-${w.n}">${note&&note.at?"Lưu lúc "+fmtDate(note.at):""}</span></div>`;
+      else noteHTML=`<p class="notel">Nhận xét của giáo viên</p><p class="notetext">${note&&note.text?esc(note.text):"Chưa có nhận xét."}</p>${note&&note.at?`<p class="saved">${fmtDate(note.at)}</p>`:""}`;
+    }
+    return `<article class="wcard"><header><h3>Tuần ${w.n} · ${esc(w.title)}</h3><span class="status ${ui[1]}">${ui[0]}</span></header>
+    <div class="dots" aria-label="${s.done}/${s.total} ngày đã học">${dots}<span>${s.done}/${s.total} ngày</span></div>
+    <p class="line">${tl}</p>
+    <p class="line">Bài nói đã gửi: <b>${s.sent}/${s.sids.length}</b></p>
+    <p class="line muted">${s.last?"Hoạt động gần nhất: "+fmtDate(s.last):"Chưa có hoạt động"}</p>
+    ${reasons}${fast}${noteHTML}</article>`;
+  }).join("");
+  const att=STATE.attempts.slice().sort((p,q)=>p.at<q.at?1:-1).slice(0,15).map(x=>{
+    const pct=Math.round(x.correct/x.total*100);
+    const name=x.test==="mockA"?"Thi thử A":x.test==="mockB"?"Thi thử B":"Tuần "+x.test.slice(1);
+    const fastF=x.seconds>0&&x.seconds<x.total*12;
+    return `<tr><td>${fmtDate(x.at)}</td><td>${name}</td><td>${x.correct}/${x.total} (${pct}%)</td><td>${pct>=80?'<span class="tag-pass">Đạt</span>':'<span class="tag-fail">Chưa đạt</span>'}</td><td>${x.seconds?fmtSec(x.seconds):"—"}${fastF?' <span class="tag-fail">quá nhanh</span>':""}</td></tr>`;
+  }).join("");
+  const cfg=CTX.online?(CTX.canEdit?`<div class="cfg"><label for="cfg-start">Ngày bắt đầu học (để so với lịch)</label><input type="date" id="cfg-start" value="${esc(STATE.config.start||"")}"><button class="btn sm" data-act="save-start">Lưu</button><span class="saved" id="saved-start"></span></div>`:`<p class="line muted">Ngày bắt đầu: ${STATE.config.start?esc(STATE.config.start):"chưa đặt"}</p>`):"";
+  const localNote=!CTX.inClaude?`<div class="callout">Bản này chạy trên máy: điểm và tiến độ chỉ lưu trong trình duyệt này. Muốn phụ huynh và giáo viên theo dõi từ xa, hãy dùng bản online.</div>`:"";
+  return `<div class="hero"><div class="eyebrow">${esc(roleLabel())}</div><h1>${CTX.inClaude?"Bảng quan sát":"Sổ điểm"}</h1>
+  <p class="lede">Một tuần được tính là <b>đạt</b> khi Hưng học ít nhất 5 trong 6 ngày, bài kiểm tra từ 80% trở lên, và đã gửi ít nhất 60% số bài nói.</p></div>
+  <div id="banner">${bannerHTML()}</div>${localNote}
+  <div class="sumgrid">
+   <div class="stat"><b>${passed}/6</b><span>tuần đạt</span></div>
+   <div class="stat"><b>${mockOk?"Có":"Chưa"}</b><span>cả hai đề thi thử đạt 80%</span></div>
+   <div class="stat"><b>${STATE.attempts.length}</b><span>lượt làm bài kiểm tra</span></div>
+  </div>
+  <p class="line">${esc(sched)}</p>${cfg}
+  <h2 style="margin-top:22px">Theo từng tuần</h2><div class="wgrid">${cards}</div>
+  <h2 style="margin-top:22px">15 lượt làm bài gần nhất</h2>
+  ${att?`<div class="tablewrap"><table><tr><th>Thời điểm</th><th>Bài</th><th>Điểm</th><th>Kết quả</th><th>Thời gian làm</th></tr>${att}</table></div>`:`<p class="line muted">Chưa có lượt làm bài kiểm tra nào.</p>`}`;
+}
+
+function renderPage(id){
+  const main=$("#main");
+  if(id==="intro")main.innerHTML=`<div id="banner">${bannerHTML()}</div>`+INTRO;
+  else if(id==="tracker")main.innerHTML=renderTracker();
+  else{const w=WEEKS.find(x=>"w"+x.n===id);if(w)main.innerHTML=`<div id="banner">${bannerHTML()}</div>`+renderWeek(w);else{main.innerHTML=`<div id="banner">${bannerHTML()}</div>`+INTRO;id="intro"}}
+  renderNav(id);
+  syncUI();
+  window.scrollTo(0,0);
+}
+const curPage=()=>(location.hash||"#intro").slice(1);
+
+function renderNav(cur){
+  const link=(id,t,s,sub,pct)=>`<a href="#${id}"${cur===id?' aria-current="page"':""}><b>${t}</b><span>${s||""}</span>${sub?`<small>${sub}</small>`:""}${pct!=null?`<div class="bar"><i style="width:${pct}%"></i></div>`:""}</a>`;
+  $("#side").innerHTML=`<p class="brand"><small>Ebook tự học</small>Tuấn Hưng · A1</p>`+
+    link("intro","Bắt đầu","","Kế hoạch 6 tuần")+
+    WEEKS.map(w=>link("w"+w.n,"Tuần "+w.n,weekProgress(w)+"%",esc(w.title),weekProgress(w))).join("")+
+    link("tracker",CTX.inClaude?"Quan sát":"Sổ điểm","","Kết quả và tiến độ");
+}
+
+/* keep checkboxes / buttons in sync with state without re-rendering the page */
+function syncUI(){
+  $$("input[data-act=day-done]").forEach(el=>{
+    const v=isDone(+el.dataset.w,+el.dataset.d);
+    el.checked=v;el.closest("details.day").classList.toggle("done",v);
+    el.disabled=!CTX.canWrite;
+  });
+  $$(".block.speak").forEach(sec=>{
+    const r=STATE.speaking[sec.id];
+    const btn=$(".sent",sec),info=$(".sentinfo",sec);
+    if(!btn)return;
+    const sent=!!(r&&r.sent);
+    btn.textContent=sent?"Đã gửi. Bấm để bỏ đánh dấu":"Đánh dấu: đã ghi âm và gửi cho giáo viên";
+    btn.classList.toggle("is-sent",sent);
+    btn.disabled=!CTX.canWrite;
+    info.textContent=sent&&r.at?`Đã gửi lúc ${fmtDate(r.at)}${r.total?`, tự chấm ${r.checks}/${r.total} mục`:""}`:"";
+  });
+}
+function applyRole(){
+  const b=$("#banner");if(b)b.innerHTML=bannerHTML();
+  syncUI();
+}
+function onData(){
+  renderNav(curPage());
+  syncUI();
+  const b=$("#banner");if(b)b.innerHTML=bannerHTML();
+  if(curPage()==="tracker"){
+    const ae=document.activeElement;
+    if(!(ae&&ae.closest&&ae.closest("#main")&&ae.matches("textarea,input")))renderPage("tracker");
+  }
+}
+
+/* ---------- recorder (local file only) ---------- */
+let activeRec=null;
+function stopActive(){if(activeRec&&activeRec.mr.state!=="inactive")activeRec.mr.stop()}
+async function toggleRec(btn){
+  const wrap=btn.closest(".rec-wrap");
+  if(activeRec&&activeRec.wrap===wrap){stopActive();return}
+  if(activeRec)stopActive();
+  const note=$(".rec-note",wrap);
+  if(!navigator.mediaDevices||!window.MediaRecorder){note.textContent="Trình duyệt này không hỗ trợ ghi âm. Hãy ghi bằng ứng dụng ghi âm trên điện thoại hoặc voice note Zalo rồi gửi lại.";return}
+  let stream;
+  try{stream=await navigator.mediaDevices.getUserMedia({audio:true})}
+  catch(e){note.textContent="Không dùng được micro. Hãy cho phép micro trong trình duyệt, hoặc ghi bằng điện thoại rồi gửi lại.";return}
+  const mr=new MediaRecorder(stream);
+  const chunks=[];const start=Date.now();
+  const timer=$(".timer",wrap);
+  const tick=setInterval(()=>{const s=Math.floor((Date.now()-start)/1000);timer.textContent=fmtSec(s)},250);
+  mr.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
+  mr.onstop=()=>{
+    clearInterval(tick);stream.getTracks().forEach(t=>t.stop());
+    btn.textContent="Bắt đầu ghi âm";btn.classList.remove("on");
+    const type=mr.mimeType||"audio/webm";
+    const ext=type.includes("mp4")?"m4a":type.includes("ogg")?"ogg":"webm";
+    const blob=new Blob(chunks,{type});
+    const url=URL.createObjectURL(blob);
+    const takes=$(".takes",wrap);
+    const n=takes.children.length+1;
+    const name=`tuan-hung-${wrap.dataset.rec}-lan${n}.${ext}`;
+    const div=document.createElement("div");div.className="take";
+    div.innerHTML=`<span><b>Lần ${n}</b></span><audio controls src="${url}"></audio><a class="btn ghost sm" href="${url}" download="${name}">Tải về</a><button class="btn ghost sm" data-act="del-take">Xóa</button>`;
+    takes.appendChild(div);
+    activeRec=null;
+  };
+  mr.start();
+  activeRec={mr,wrap};
+  btn.textContent="Dừng ghi âm";btn.classList.add("on");
+}
+
+/* ---------- checking ---------- */
+function checkFill(sec){
+  let ok=0;const inputs=$$("input.gap",sec);
+  inputs.forEach(inp=>{
+    const answers=inp.dataset.a.split("|").map(norm);
+    const good=answers.includes(norm(inp.value));
+    inp.classList.toggle("ok",good);inp.classList.toggle("bad",!good);
+    const fb=inp.closest("li").querySelector(".fb");
+    fb.className="fb "+(good?"ok":"bad");
+    fb.textContent=good?"Đúng":(inp.value.trim()?"Chưa đúng, thử lại hoặc bấm Xem đáp án":"Chưa điền");
+    if(good)ok++;
+  });
+  const sc=$(".score",sec);sc.textContent=`${ok}/${inputs.length} câu đúng`;
+  sc.className="score "+(ok/inputs.length>=0.8?"pass":"fail");
+}
+function showFill(sec){
+  $$("input.gap",sec).forEach(inp=>{
+    const fb=inp.closest("li").querySelector(".fb");
+    fb.className="fb";fb.textContent="Đáp án: "+inp.dataset.a.split("|").join(" hoặc ");
+  });
+}
+function resetFill(sec){
+  $$("input.gap",sec).forEach(inp=>{inp.value="";inp.classList.remove("ok","bad");const fb=inp.closest("li").querySelector(".fb");fb.textContent="";fb.className="fb"});
+  const sc=$(".score",sec);sc.textContent="";sc.className="score";
+}
+function checkMcq(sec){
+  const qs=$$(".q",sec);let ok=0;
+  qs.forEach(q=>{
+    const correct=q.dataset.correct;
+    const sel=$("input:checked",q);
+    $$(".opt",q).forEach(o=>{o.classList.remove("right","wrong")});
+    $$(".opt",q).forEach(o=>{
+      const v=$("input",o).value;
+      if(v===correct)o.classList.add("right");
+      else if(sel&&v===sel.value)o.classList.add("wrong");
+    });
+    const fb=$(".fb",q);
+    if(sel&&sel.value===correct){ok++;fb.textContent="";}
+    else{fb.className="fb bad";fb.textContent=sel?"Đáp án đúng: "+correct:"Bạn chưa chọn. Đáp án đúng: "+correct}
+  });
+  const sc=$(".score",sec);
+  const pct=Math.round(ok/qs.length*100);
+  sc.textContent=`${ok}/${qs.length} câu đúng (${pct}%) · ${pct>=80?"Đạt":"Chưa đạt 80%"}`;
+  sc.className="score "+(pct>=80?"pass":"fail");
+  const t=sec.dataset.test;
+  if(t&&sec.dataset.recorded!=="1"&&CTX.canWrite){
+    sec.dataset.recorded="1";
+    const secs=sec.dataset.t0?Math.round((Date.now()-(+sec.dataset.t0))/1000):0;
+    const at=new Date().toISOString();
+    addAttempt({id:t+"_"+Date.now(),test:t,correct:ok,total:qs.length,seconds:secs,at});
+    renderNav(curPage());
+  }
+}
+function resetMcq(sec){
+  $$(".q",sec).forEach(q=>{$$("input",q).forEach(i=>i.checked=false);$$(".opt",q).forEach(o=>o.classList.remove("right","wrong"));const fb=$(".fb",q);fb.textContent="";fb.className="fb"});
+  const sc=$(".score",sec);sc.textContent="";sc.className="score";
+  delete sec.dataset.t0;delete sec.dataset.recorded;
+}
+
+/* ---------- events ---------- */
+document.addEventListener("click",async e=>{
+  const el=e.target.closest("[data-act]");
+  if(!el)return;
+  const act=el.dataset.act;
+  const sec=el.closest(".block");
+  if(act==="say")say(el.dataset.say);
+  else if(act==="check-fill")checkFill(sec);
+  else if(act==="show-fill")showFill(sec);
+  else if(act==="reset-fill")resetFill(sec);
+  else if(act==="check-mcq")checkMcq(sec);
+  else if(act==="reset-mcq")resetMcq(sec);
+  else if(act==="rec")toggleRec(el);
+  else if(act==="del-take"){const t=el.closest(".take");const a=$("audio",t);if(a&&a.src)URL.revokeObjectURL(a.src);t.remove()}
+  else if(act==="sent"){
+    if(!CTX.canWrite)return;
+    const id=sec.id;const m=/^w(\d+)d(\d+)b/.exec(id)||[];
+    const cur=STATE.speaking[id];
+    const sent=!(cur&&cur.sent);
+    const checks=$$(".checks input:checked",sec).length,total=$$(".checks input",sec).length;
+    setSpeak(id,{w:+m[1]||0,d:+m[2]||0,title:el.dataset.title,sent,at:new Date().toISOString(),checks,total});
+    syncUI();renderNav(curPage());
+  }
+  else if(act==="save-note"){
+    const n=+el.dataset.w;const ta=$("#note-"+n);
+    const rec={w:n,text:ta.value.trim(),at:new Date().toISOString()};
+    const ok=await dbSet("notes/w"+n,rec);
+    if(ok)STATE.notes["w"+n]=rec;
+    const s=$("#saved-"+n);if(s)s.textContent=ok?"Đã lưu "+fmtDate(rec.at):"Không lưu được. Kiểm tra quyền chỉnh sửa.";
+  }
+  else if(act==="save-start"){
+    const v=$("#cfg-start").value;
+    const ok=await dbSet("config/main",{start:v});
+    if(ok)STATE.config={start:v};
+    const s=$("#saved-start");if(s)s.textContent=ok?"Đã lưu":"Không lưu được. Kiểm tra quyền chỉnh sửa.";
+    if(ok)renderPage("tracker");
+  }
+});
+document.addEventListener("change",e=>{
+  const el=e.target;
+  if(el.dataset.act==="hide-vi")el.closest(".vocab").classList.toggle("hide-vi",el.checked);
+  if(el.dataset.act==="day-done"){
+    if(!CTX.canWrite){el.checked=!el.checked;return}
+    setDone(+el.dataset.w,+el.dataset.d,el.checked);
+    el.closest("details.day").classList.toggle("done",el.checked);
+    renderNav(curPage());
+  }
+  if(el.type==="radio"){
+    const sec=el.closest("[data-kind=mcq]");
+    if(sec&&!sec.dataset.t0)sec.dataset.t0=String(Date.now());
+  }
+});
+document.addEventListener("keydown",e=>{
+  if(e.key==="Enter"&&e.target.matches("input.gap")){
+    const all=$$("input.gap",e.target.closest(".block"));const i=all.indexOf(e.target);
+    if(i>=0&&i<all.length-1)all[i+1].focus();else checkFill(e.target.closest(".block"));
+  }
+});
+window.addEventListener("hashchange",()=>renderPage(curPage()));
+
+/* ---------- shared mode (claude.ai artifact with db) ---------- */
+async function initOnline(){
+  if(!CTX.inClaude)return;
+  let db=null,user=null;
+  try{db=await window.claude.use("db")}catch(e){}
+  try{user=await window.claude.use("user")}catch(e){}
+  if(!db){CTX.status="nodb";applyRole();return}
+  CTX.db=db;CTX.online=true;CTX.status="loading";
+  STATE.days={};STATE.attempts=[];STATE.speaking={};
+  if(user){
+    try{const cw=await user.can("data.write");CTX.canWrite=cw!==false}catch(e){}
+    try{CTX.canEdit=!!(await user.canEdit())}catch(e){}
+  }
+  applyRole();onData();
+  const timer=setTimeout(()=>{if(CTX.status==="loading"){CTX.status="slow";applyRole()}},10000);
+  const ok=()=>{if(CTX.status==="loading"||CTX.status==="slow"){CTX.status="ok";clearTimeout(timer)}};
+  const fail=()=>{CTX.status="error";applyRole()};
+  const sub=(name,fn)=>{
+    try{db.collection(name).onSnapshot(s=>{fn(s);ok();onData()},fail)}catch(e){fail()}
+  };
+  const map=s=>{const m={};s.docs.forEach(d=>{m[d.id]=d.data()});return m};
+  sub("days",s=>{STATE.days=map(s)});
+  sub("attempts",s=>{STATE.attempts=Object.values(map(s))});
+  sub("speaking",s=>{STATE.speaking=map(s)});
+  sub("notes",s=>{STATE.notes=map(s)});
+  try{db.doc("config/main").onSnapshot(s=>{STATE.config=s.exists?(s.data()||{}):{};ok();onData()},fail)}catch(e){fail()}
+}
+
+loadLocal();
+renderPage(curPage());
+initOnline();
+</script>
+</body>
+</html>
