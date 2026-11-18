@@ -195,6 +195,22 @@ details.day.locked>summary .lk{display:inline}
 .sched{background:var(--accent-soft);border-radius:8px;padding:8px 12px;margin:0 0 14px}
 .sched a{color:var(--accent)}
 nav.side .logout{margin-top:10px;font:600 13px var(--font-body);background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:8px 12px;cursor:pointer;text-align:left;white-space:nowrap}
+/* lịch sử lượt làm bài */
+.runs{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line)}
+.runs:empty{display:none}
+.runs>b{font-size:14px;color:var(--muted)}
+details.run{border:1px solid var(--line);border-radius:8px;margin:6px 0;background:var(--surface)}
+details.run>summary{cursor:pointer;padding:7px 10px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center;font-size:14.5px}
+details.run>summary .rn{font-weight:700;min-width:52px}
+details.run>summary .rt{color:var(--muted);font-variant-numeric:tabular-nums}
+details.run>summary .rx{font-weight:700;flex:1 1 200px}
+details.run .rd{padding:4px 10px 10px}
+details.run .rd table{min-width:0;font-size:14px}
+details.run .rd td.ok{color:var(--good);font-weight:700}
+details.run .rd td.bad{color:var(--bad);font-weight:700}
+.rday{margin:16px 0 4px;font:700 15px var(--font-display)}
+.runfilter{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0}
+.runfilter select{font:inherit;font-size:15px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head>
@@ -784,13 +800,14 @@ const PASS=0.8;
 // Link "Ứng dụng web" của Apps Script (xem apps-script/HUONG-DAN.md). Để trống thì trang chạy riêng trên máy, không cần mã.
 const API_URL="https://script.google.com/macros/s/AKfycbwFcuxfvZZXksmXMqQuww4M-Fc_o098IWZ9c-5FsjbjIgVCCBvQY9uy7hr7xdPNRqk2pg/exec";
 const CTX={remote:!!API_URL,online:false,code:null,role:null,canWrite:true,canEdit:false,status:"local"};
-const STATE={days:{},attempts:[],speaking:{},notes:{},config:{}};
+const STATE={days:{},attempts:[],speaking:{},notes:{},config:{},runs:{}};
 const dayId=(n,i)=>`w${n}d${i}`;
 function loadLocal(){
   WEEKS.forEach(w=>w.days.forEach((d,i)=>{if(LS.get("th4:d:"+dayId(w.n,i+1))==="1")STATE.days[dayId(w.n,i+1)]={w:w.n,d:i+1,done:true,late:LS.get("th4:dl:"+dayId(w.n,i+1))==="1"}}));
   try{STATE.attempts=JSON.parse(LS.get("th4:attempts")||"[]")}catch(e){STATE.attempts=[]}
   try{STATE.speaking=JSON.parse(LS.get("th4:speak")||"{}")}catch(e){STATE.speaking={}}
   try{STATE.config=JSON.parse(LS.get("th4:config")||"{}")}catch(e){STATE.config={}}
+  try{STATE.runs=JSON.parse(LS.get("th4:runs")||"{}")}catch(e){STATE.runs={}}
 }
 /* shared mode: Google Sheet via Apps Script; writes wait in a queue until they reach the sheet */
 const Q={
@@ -803,7 +820,7 @@ async function api(body){
   return r.json();
 }
 function saveCache(){
-  LS.set("th4:cache",JSON.stringify({days:STATE.days,attempts:STATE.attempts,speaking:STATE.speaking,notes:STATE.notes,config:STATE.config}));
+  LS.set("th4:cache",JSON.stringify({days:STATE.days,attempts:STATE.attempts,speaking:STATE.speaking,notes:STATE.notes,config:STATE.config,runs:STATE.runs}));
 }
 function loadCache(){
   try{const c=JSON.parse(LS.get("th4:cache")||"null");if(c)Object.assign(STATE,c)}catch(e){}
@@ -881,6 +898,70 @@ function setSpeak(id,rec){
   STATE.speaking[id]=rec;
   if(CTX.online)dbSet("speaking/"+id,rec);else LS.set("th4:speak",JSON.stringify(STATE.speaking));
 }
+/* ---------- lượt làm bài: mỗi lần bấm Kiểm tra = 1 lượt, có giờ bắt đầu, kết thúc và từng câu trả lời ---------- */
+function addRun(r){
+  STATE.runs[r.id]=r;
+  if(CTX.online)dbSet("runs/"+r.id,r);else LS.set("th4:runs",JSON.stringify(STATE.runs));
+}
+/* bắt đầu lượt = lần đầu chạm vào bài (gõ/chọn) kể từ lần Kiểm tra hoặc Làm lại trước đó */
+function markRunStart(sec){if(sec&&!sec.dataset.r0)sec.dataset.r0=String(Date.now())}
+function recordRun(sec,ans,correct,total,attemptId){
+  if(!CTX.canWrite)return;
+  const end=Date.now(),start=sec.dataset.r0?+sec.dataset.r0:end;
+  delete sec.dataset.r0;
+  const m=/^w(\d+)d(\d+)b(\d+)$/.exec(sec.id)||[];
+  const w=+m[1]||0,d=+m[2]||0;
+  const due=w?dueOf(w,d):null;
+  const r={id:sec.id+"_"+end,ex:sec.id,w,d,h:($("h3",sec)||{}).textContent||"",kind:sec.dataset.kind,
+    start:new Date(start).toISOString(),end:new Date(end).toISOString(),secs:Math.round((end-start)/1000),
+    correct,total,ans:ans.map(a=>[String(a[0]).slice(0,60),a[1]?1:0])};
+  if(sec.dataset.test)r.test=sec.dataset.test;
+  if(attemptId)r.attempt=attemptId;
+  if(due&&end>=due)r.late=true;
+  addRun(r);
+}
+const blockOf=ex=>{const m=/^w(\d+)d(\d+)b(\d+)$/.exec(ex);if(!m)return null;const w=WEEKS.find(x=>x.n===+m[1]);const d=w&&w.days[+m[2]-1];return d?d.blocks[+m[3]-1]:null};
+const fmtTime=iso=>{try{return new Date(iso).toLocaleTimeString("vi-VN",{hour:"2-digit",minute:"2-digit"})}catch(e){return ""}};
+const fmtDur=s=>s<60?s+" giây":Math.floor(s/60)+" phút "+(s%60?String(s%60).padStart(2,"0")+" giây":"");
+const plainQ=s=>String(s).replace(/\[\[say:(.+?)\]\]/g,"(nghe)");
+/* các lượt của một bài, cũ trước mới sau; bài kiểm tra cũ (trước khi có ghi lượt) lấy từ attempts */
+function runsOf(ex){
+  const list=Object.values(STATE.runs).filter(r=>r&&r.ex===ex);
+  const b=blockOf(ex);
+  if(b&&b.test){
+    const linked=new Set(list.map(r=>r.attempt).filter(Boolean));
+    STATE.attempts.filter(a=>a.test===b.test&&!linked.has(a.id)).forEach(a=>{
+      const end=new Date(a.at).getTime();
+      list.push({id:"old_"+a.id,ex,old:true,start:new Date(end-(a.seconds||0)*1000).toISOString(),end:a.at,secs:a.seconds||0,correct:a.correct,total:a.total,late:a.late,h:b.h});
+    });
+  }
+  return list.sort((p,q)=>p.end<q.end?-1:1);
+}
+const OPEN_RUNS=new Set();
+function runDetail(r){
+  if(r.old||!r.ans)return `<p class="line muted">Lượt này làm trước khi ebook ghi từng câu, chỉ có điểm và thời gian.</p>`;
+  const b=blockOf(r.ex);
+  const rows=r.ans.map((a,i)=>{
+    const it=b&&b.items[i];
+    const q=it?esc(plainQ(it[0])):"Câu "+(i+1);
+    const key=it?esc(String(it[1]).split("|").join(" / ")):"";
+    const given=a[0]===""?'<span class="muted">(bỏ trống)</span>':esc(a[0]);
+    return `<tr><td>${i+1}</td><td>${q}</td><td>${given}</td><td class="${a[1]?"ok":"bad"}">${a[1]?"Đúng":"Sai"}</td><td>${a[1]?"":key}</td></tr>`;
+  }).join("");
+  return `<div class="tablewrap"><table><tr><th>#</th><th>Câu</th><th>Hưng trả lời</th><th></th><th>Đáp án đúng</th></tr>${rows}</table></div>`;
+}
+function runRow(r,n,showEx){
+  const pct=r.total?Math.round(r.correct/r.total*100):0;
+  const sameDay=new Date(r.start).toDateString()===new Date(r.end).toDateString();
+  const time=`${fmtDate(r.start)} → ${sameDay?fmtTime(r.end):fmtDate(r.end)}`;
+  const fast=r.total&&r.secs>0&&r.secs<r.total*4;
+  return `<details class="run" data-run="${esc(r.id)}"${OPEN_RUNS.has(r.id)?" open":""}><summary><span class="rn">Lượt ${n}</span>${showEx?`<span class="rx">${esc(r.h||"")}</span>`:""}<span class="rt">${time} · ${r.secs?fmtDur(r.secs):"dưới 1 giây"}</span><span class="${pct>=80?"tag-pass":"tag-fail"}">${r.correct}/${r.total} (${pct}%)</span>${r.late?'<span class="latetag">Muộn</span>':""}${fast?'<span class="tag-fail">làm rất nhanh</span>':""}</summary><div class="rd">${runDetail(r)}</div></details>`;
+}
+function runsHTML(ex){
+  const list=runsOf(ex);
+  if(!list.length)return "";
+  return `<b>Các lượt Hưng đã làm (${list.length})</b>`+list.map((r,i)=>runRow(r,i+1)).reverse().join("");
+}
 function scoreOf(t){
   const a=STATE.attempts.filter(x=>x.test===t).sort((p,q)=>p.at<q.at?-1:1);
   if(!a.length)return null;
@@ -913,7 +994,7 @@ function rFill(b,id){
     return `<li>${q.includes("___")?q.replace("___",inp):q+" "+inp}<span class="fb"></span></li>`;
   }).join("");
   return `<section class="block ex" data-kind="fill" id="${id}"><h3>${b.h}</h3>${b.intro?`<p class="intro">${b.intro}</p>`:""}<ol>${items}</ol>
-  <div class="actions"><button class="btn" data-act="check-fill">Kiểm tra</button><button class="btn ghost" data-act="reset-fill">Làm lại</button><span class="score" aria-live="polite"></span></div></section>`;
+  <div class="actions"><button class="btn" data-act="check-fill">Kiểm tra</button><button class="btn ghost" data-act="reset-fill">Làm lại</button><span class="score" aria-live="polite"></span></div><div class="runs"></div></section>`;
 }
 
 function rMcq(b,id){
@@ -926,7 +1007,7 @@ function rMcq(b,id){
   const sc=b.test?scoreOf(b.test):null;
   const rule=b.test?`<p class="intro"><b>Làm hết bài rồi nhấn Kiểm tra để xem đáp án.</b> Chỉ lần làm đầu tiên được tính để xét Đạt tuần.</p>`:"";
   return `<section class="block ex" data-kind="mcq" data-test="${b.test||""}" id="${id}"><h3>${b.h}</h3>${b.intro?`<p class="intro">${b.intro}</p>`:""}${rule}${items}
-  <div class="actions"><button class="btn" data-act="check-mcq">Kiểm tra</button><button class="btn ghost" data-act="reset-mcq">Làm lại</button><span class="score" aria-live="polite">${sc?`Lần đầu: ${sc.first}/${sc.total} · Cao nhất: ${sc.best}/${sc.total}`:""}</span></div></section>`;
+  <div class="actions"><button class="btn" data-act="check-mcq">Kiểm tra</button><button class="btn ghost" data-act="reset-mcq">Làm lại</button><span class="score" aria-live="polite">${sc?`Lần đầu: ${sc.first}/${sc.total} · Cao nhất: ${sc.best}/${sc.total}`:""}</span></div><div class="runs"></div></section>`;
 }
 
 function rSpeak(b,id){
@@ -1131,10 +1212,37 @@ function renderTracker(){
   </div>
   <p class="line">${esc(sched)}</p>${cfg}
   <h2 style="margin-top:22px">Theo từng tuần</h2><div class="wgrid">${cards}</div>
-  <h2 style="margin-top:22px">15 lượt làm bài gần nhất</h2>
+  ${runHistoryHTML()}
+  <h2 style="margin-top:22px">15 lượt làm bài kiểm tra gần nhất</h2>
   ${att?`<div class="tablewrap"><table><tr><th>Thời điểm</th><th>Bài</th><th>Điểm</th><th>Kết quả</th><th>Thời gian làm</th></tr>${att}</table></div>`:`<p class="line muted">Chưa có lượt làm bài kiểm tra nào.</p>`}`;
 }
 
+/* Sổ điểm: lịch sử mọi lượt làm bài, theo ngày làm, lọc theo tuần */
+let RUN_WEEK=null;
+function runHistoryHTML(){
+  const sel=$("#run-week");if(sel)RUN_WEEK=sel.value;
+  const all=[];
+  WEEKS.forEach(w=>w.days.forEach((d,di)=>d.blocks.forEach((b,bi)=>{
+    if(b.t!=="fill"&&b.t!=="mcq")return;
+    const ex=`w${w.n}d${di+1}b${bi+1}`;
+    runsOf(ex).forEach((r,i)=>all.push({r,n:i+1,w:w.n,d:di+1,h:b.h}));
+  })));
+  const weeksWith=[...new Set(all.map(x=>x.w))].sort((a,b)=>a-b);
+  if(RUN_WEEK==null){const cw=currentWeek();RUN_WEEK=weeksWith.includes(cw)?String(cw):(weeksWith.length?String(weeksWith[weeksWith.length-1]):"all")}
+  const shown=all.filter(x=>RUN_WEEK==="all"||String(x.w)===RUN_WEEK).sort((p,q)=>p.r.end<q.r.end?1:-1);
+  const opts=`<option value="all"${RUN_WEEK==="all"?" selected":""}>Tất cả các tuần</option>`+WEEKS.map(w=>`<option value="${w.n}"${String(w.n)===RUN_WEEK?" selected":""}>Tuần ${w.n}</option>`).join("");
+  let body="",lastDay="";
+  shown.forEach(x=>{
+    const day=new Date(x.r.end).toLocaleDateString("vi-VN",{weekday:"long",day:"2-digit",month:"2-digit",year:"numeric"});
+    if(day!==lastDay){body+=`<p class="rday">${esc(day)}</p>`;lastDay=day}
+    body+=runRow({...x.r,h:`Tuần ${x.w} · Ngày ${x.d} · ${x.h}`},x.n,true);
+  });
+  const totalSecs=shown.reduce((t,x)=>t+(x.r.secs||0),0);
+  return `<h2 style="margin-top:22px">Lịch sử làm bài</h2>
+  <p class="line muted">Mỗi lần Hưng bấm "Kiểm tra" là một lượt. Giờ bắt đầu là lúc Hưng bắt đầu gõ hoặc chọn đáp án, giờ kết thúc là lúc bấm Kiểm tra. Bấm vào một lượt để xem Hưng trả lời từng câu thế nào. Bài luyện làm trước ngày 18/11/2026 chưa được ghi lại.</p>
+  <div class="runfilter"><label for="run-week">Xem</label><select id="run-week">${opts}</select><span class="muted">${shown.length} lượt${totalSecs?" · tổng "+fmtDur(totalSecs):""}</span></div>
+  ${body||`<p class="line muted">Chưa có lượt làm bài nào trong phần này.</p>`}`;
+}
 function renderPage(id){
   const main=$("#main");
   if(id==="intro")main.innerHTML=`<div id="banner">${bannerHTML()}</div>`+INTRO;
@@ -1165,6 +1273,11 @@ function syncUI(){
     el.disabled=!CTX.canWrite||v||left>0;
     const h=$("[data-left]",det);
     if(h)h.textContent=!CTX.canWrite||v?"":left?`Còn ${left} bài tập chưa bấm Kiểm tra. Làm hết mới tick được và mở ngày tiếp theo.`:"";
+  });
+  $$(".block.ex").forEach(sec=>{
+    const box=$(".runs",sec);if(!box)return;
+    const h=runsHTML(sec.id);
+    if(box.dataset.h!==h){box.dataset.h=h;box.innerHTML=h}
   });
   $$(".block.speak").forEach(sec=>{
     const r=STATE.speaking[sec.id];
@@ -1262,10 +1375,11 @@ async function uploadTake(div){
 
 /* ---------- checking ---------- */
 function checkFill(sec){
-  let ok=0;const inputs=$$("input.gap",sec);
+  let ok=0;const inputs=$$("input.gap",sec);const given=[];
   inputs.forEach(inp=>{
     const answers=inp.dataset.a.split("|").map(norm);
     const good=answers.includes(norm(inp.value));
+    given.push([inp.value.trim(),good]);
     inp.classList.toggle("ok",good);inp.classList.toggle("bad",!good);
     const fb=inp.closest("li").querySelector(".fb");
     fb.className="fb "+(good?"ok":"bad");
@@ -1273,6 +1387,7 @@ function checkFill(sec){
     fb.textContent=good?"Đúng":(inp.value.trim()?"Chưa đúng. Đáp án: ":"Chưa điền. Đáp án: ")+ans;
     if(good)ok++;
   });
+  recordRun(sec,given,ok,inputs.length);
   CHK.set(sec.id);syncUI();
   const sc=$(".score",sec);sc.textContent=`${ok}/${inputs.length} câu đúng`;
   sc.className="score "+(ok/inputs.length>=0.8?"pass":"fail");
@@ -1280,9 +1395,10 @@ function checkFill(sec){
 function resetFill(sec){
   $$("input.gap",sec).forEach(inp=>{inp.value="";inp.classList.remove("ok","bad");const fb=inp.closest("li").querySelector(".fb");fb.textContent="";fb.className="fb"});
   const sc=$(".score",sec);sc.textContent="";sc.className="score";
+  delete sec.dataset.r0;
 }
 function checkMcq(sec){
-  const qs=$$(".q",sec);let ok=0;
+  const qs=$$(".q",sec);let ok=0;const ans=[];
   if(sec.dataset.test&&sec.dataset.recorded!=="1"){
     const left=qs.filter(q=>!$("input:checked",q)).length;
     if(left&&!confirm(`Còn ${left} câu chưa làm, vẫn nộp?`))return;
@@ -1297,28 +1413,32 @@ function checkMcq(sec){
       else if(sel&&v===sel.value)o.classList.add("wrong");
     });
     const fb=$(".fb",q);
+    ans.push([sel?sel.value:"",!!(sel&&sel.value===correct)]);
     if(sel&&sel.value===correct){ok++;fb.textContent="";}
     else{fb.className="fb bad";fb.textContent=sel?"Đáp án đúng: "+correct:"Bạn chưa chọn. Đáp án đúng: "+correct}
   });
-  CHK.set(sec.id);syncUI();
-  const sc=$(".score",sec);
-  const pct=Math.round(ok/qs.length*100);
-  sc.textContent=`${ok}/${qs.length} câu đúng (${pct}%) · ${pct>=80?"Đạt":"Chưa đạt 80%"}`;
-  sc.className="score "+(pct>=80?"pass":"fail");
   const t=sec.dataset.test;
+  let attemptId=null;
   if(t&&sec.dataset.recorded!=="1"&&CTX.canWrite){
     sec.dataset.recorded="1";
     const secs=sec.dataset.t0?Math.round((Date.now()-(+sec.dataset.t0))/1000):0;
     const at=new Date().toISOString();
     const m=/^w(\d+)d(\d+)b/.exec(sec.id)||[];const due=m[1]?dueOf(+m[1],+m[2]):null;
-    addAttempt({id:t+"_"+Date.now(),test:t,correct:ok,total:qs.length,seconds:secs,at,...(due&&new Date(at)>=due?{late:true}:{})});
-    renderNav(curPage());
+    attemptId=t+"_"+Date.now();
+    addAttempt({id:attemptId,test:t,correct:ok,total:qs.length,seconds:secs,at,...(due&&new Date(at)>=due?{late:true}:{})});
   }
+  recordRun(sec,ans,ok,qs.length,attemptId);
+  CHK.set(sec.id);syncUI();
+  if(attemptId)renderNav(curPage());
+  const sc=$(".score",sec);
+  const pct=Math.round(ok/qs.length*100);
+  sc.textContent=`${ok}/${qs.length} câu đúng (${pct}%) · ${pct>=80?"Đạt":"Chưa đạt 80%"}`;
+  sc.className="score "+(pct>=80?"pass":"fail");
 }
 function resetMcq(sec){
   $$(".q",sec).forEach(q=>{$$("input",q).forEach(i=>i.checked=false);$$(".opt",q).forEach(o=>o.classList.remove("right","wrong"));const fb=$(".fb",q);fb.textContent="";fb.className="fb"});
   const sc=$(".score",sec);sc.textContent="";sc.className="score";
-  delete sec.dataset.t0;delete sec.dataset.recorded;
+  delete sec.dataset.t0;delete sec.dataset.recorded;delete sec.dataset.r0;
 }
 
 /* ---------- events ---------- */
@@ -1382,8 +1502,16 @@ document.addEventListener("change",e=>{
   if(el.type==="radio"){
     const sec=el.closest("[data-kind=mcq]");
     if(sec&&!sec.dataset.t0)sec.dataset.t0=String(Date.now());
+    markRunStart(sec);
   }
+  if(el.id==="run-week")renderPage("tracker");
 });
+document.addEventListener("input",e=>{if(e.target.matches("input.gap"))markRunStart(e.target.closest(".block.ex"))});
+/* giữ trạng thái mở/đóng của từng lượt khi trang tự làm mới */
+document.addEventListener("toggle",e=>{
+  const d=e.target;if(!d.matches||!d.matches("details.run"))return;
+  if(d.open)OPEN_RUNS.add(d.dataset.run);else OPEN_RUNS.delete(d.dataset.run);
+},true);
 document.addEventListener("keydown",e=>{
   if(e.key==="Enter"&&e.target.matches("input.gap")){
     const all=$$("input.gap",e.target.closest(".block"));const i=all.indexOf(e.target);
@@ -1445,7 +1573,7 @@ async function refresh(){
     if(r.role!==CTX.role){setRole(r.role);LS.set("th4:role",r.role)}
     const d=r.data||{};
     STATE.days=d.days||{};STATE.attempts=Object.values(d.attempts||{});STATE.speaking=d.speaking||{};
-    STATE.notes=d.notes||{};STATE.config=(d.config&&d.config.main)||{};
+    STATE.notes=d.notes||{};STATE.config=(d.config&&d.config.main)||{};STATE.runs=d.runs||{};
     if(CTX.canWrite){migrateLocal();Q.get().forEach(applyItem)}
     saveCache();
     CTX.status="ok";
@@ -1473,7 +1601,7 @@ function logout(msg){
   ["th4:code","th4:role","th4:cache"].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});
   if(!msg)try{localStorage.removeItem("th4:queue")}catch(e){}
   CTX.online=false;CTX.code=null;CTX.role=null;
-  STATE.days={};STATE.attempts=[];STATE.speaking={};STATE.notes={};STATE.config={};
+  STATE.days={};STATE.attempts=[];STATE.speaking={};STATE.notes={};STATE.config={};STATE.runs={};
   const sd=$("#startdlg");if(sd)sd.remove();
   showGate(msg);
 }
